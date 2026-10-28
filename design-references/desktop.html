@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Référence design — Desktop</title>
+<!-- RÉFÉRENCE DE DESIGN exportée depuis la maquette (canvas Claude Design).
+     Source de vérité pour : couleurs, typographie, textes, mise en page, chorégraphie des animations.
+     Le moteur d'animation ci-dessous est un prototype maison : à réimplémenter avec GSAP + ScrollTrigger. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif}
+h1,h2{text-wrap:balance}
+.pf-light{--terra-strong:#A2481F;--bg:#F6EFE4;--surface:#FFFAF2;--surface-2:#EFE3D0;--ink:#1F1A15;--muted:#5E5247;--line:#E2D3BD;--terra:#B4532A;--terra-ink:#FFF7EE;--ocre:#C98A1B;--ocre-ink:#85560A;--green:#1F4D3A;--green-text:#1F4D3A;--method-bg:#1F4D3A;--contact-bg:#8F3B1C;--on-dark:#F6EFE4;--on-dark-muted:#E4D6C3;--pat-op:.08;--nav-bg:rgba(246,239,228,.86)}
+.pf-dark{--terra-strong:#E07A4F;--bg:#15110D;--surface:#1F1914;--surface-2:#221B15;--ink:#F3EADD;--muted:#BCAD99;--line:#3A2F25;--terra:#E07A4F;--terra-ink:#15110D;--ocre:#E3A93A;--ocre-ink:#E3A93A;--green:#7FBF9A;--green-text:#8FCBA8;--method-bg:#122A20;--contact-bg:#6E2E16;--on-dark:#F3EADD;--on-dark-muted:#D8C8B4;--pat-op:.1;--nav-bg:rgba(21,17,13,.86)}
+.pf-root{transition:background-color .3s,color .3s}
+.pf-root a{color:var(--terra)}
+.pf-root a:hover{color:var(--ink)}
+.pf-nav a{color:var(--ink);text-decoration:none}
+.pf-nav a:hover{color:var(--terra)}
+.pf-btn{transition:filter .15s}
+.pf-btn:hover{filter:brightness(1.08)}
+.pf-root a.pf-btn{text-decoration:none}
+.pf-root a.pf-btn-primary,.pf-root a.pf-btn-primary:hover{color:var(--terra-ink)}
+.pf-root a.pf-btn-ghost,.pf-root a.pf-btn-ghost:hover{color:var(--ink)}
+.pf-root a.pf-btn-wa,.pf-root a.pf-btn-wa:hover{color:#1F4D3A}
+.pf-root a.pf-mail,.pf-root a.pf-mail:hover{color:var(--on-dark)}
+
+/* ---------- Mise en page statique (canvas) ---------- */
+.sc{position:relative}
+.stage{position:relative;overflow:hidden;padding:112px 120px}
+.stage-in{position:relative;z-index:1}
+.track{display:flex;flex-direction:column;gap:24px}
+.cases-bar{display:none}
+.scroll-hint{display:none}
+
+/* ---------- Mode « film » : défilement scénarisé ---------- */
+.cine .sc-hero{height:280vh;z-index:1}
+.cine .sc-cases{height:720vh;margin-top:-100vh;z-index:2}
+.cine .sc-services{height:400vh;margin-top:-100vh;z-index:3}
+.cine .sc-stack{height:360vh;margin-top:-100vh;z-index:4}
+.cine .sc-method{height:440vh;margin-top:-100vh;z-index:5}
+.cine .sc-contact{height:280vh;margin-top:-100vh;z-index:6}
+.cine .stage{position:sticky;top:0;height:100vh;box-sizing:border-box;padding:108px 120px 28px;display:flex;flex-direction:column;justify-content:center}
+.cine .stage-in{transform-origin:50% 50%}
+.cine .pat{transform:translateY(calc(var(--p,0) * -90px))}
+.cine .scroll-hint{display:flex}
+
+/* Transitions entre sections (pilotées par --e = entrée, --x = sortie) */
+.cine .sc-hero .stage-in{transform:scale(var(--fit,1))}
+/* Photo en relief : 3 plans, inclinaison à la souris, pivot + recul au scroll */
+.ph-scene{perspective:1100px;perspective-origin:50% 45%}
+.ph-tilt{transform-style:preserve-3d}
+.cine .ph-tilt{will-change:transform;transform:translateZ(calc(var(--p,0) * -240px)) rotateY(calc(var(--p,0) * -26deg + var(--mx,0) * (1 - var(--p,0)) * 8deg)) rotateX(calc(var(--p,0) * 5deg + var(--my,0) * (1 - var(--p,0)) * -8deg))}
+/* Hero → Études de cas : la caméra recule pendant que le cercle s'ouvre */
+.cine .sc-hero .stage{transform-origin:70% 50%;transform:perspective(1400px) translateZ(calc(var(--x,0) * (2 - var(--x,0)) * -900px)) rotateX(calc(var(--x,0) * (2 - var(--x,0)) * 8deg));border-radius:calc(var(--x,0) * 48px);box-shadow:0 40px 90px rgba(20,14,8,calc(var(--x,0) * .35));opacity:calc(1 - var(--x,0) * .35)}
+.cine .sc-hero{background:var(--surface-2)}
+.cine .sc-cases .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(2000px) translateZ(-50vh) rotateX(calc(var(--x,0) * 90deg)) translateZ(50vh);backface-visibility:hidden;clip-path:circle(calc(var(--e,1) * var(--e,1) * 110%) at 70% 50%);padding-left:0;padding-right:0}
+.cine .sc-cases .stage-in{perspective:1600px;perspective-origin:50% 50%}
+/* Études de cas → Services : rotation de cube. Les études de cas basculent vers le haut (face avant → dessus),
+   Services arrive comme la face du dessous. Axe de rotation au centre du cube, à 50vh derrière l'écran. */
+.cine .sc-services .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(2000px) translateZ(-50vh) rotateX(calc((var(--e,1) - 1) * 90deg)) translateZ(50vh);backface-visibility:hidden}
+.cube-shade{display:none}
+.cine .cube-shade{display:block;position:absolute;inset:0;pointer-events:none;z-index:6;background:#000}
+.cine .sc-cases .cube-shade{opacity:calc(var(--x,0) * .5)}
+.cine .sc-services .cube-shade{opacity:calc((1 - var(--e,1)) * .5)}
+.pf-light.cine{--backdrop:#2E241C}
+.pf-dark.cine{--backdrop:#070504}
+.cine .sc-services .stage-in{transform:translateY(calc(var(--x,0) * -14vh)) scale(var(--fit,1));opacity:calc(1 - var(--x,0) * .5)}
+.cine .sc-stack .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(2200px) translateZ(calc(var(--x,0) * (1 - var(--x,0)) * -2000px)) rotateY(calc(var(--x,0) * 180deg));backface-visibility:hidden;clip-path:inset(0 calc((1 - var(--e,1)) * 100%) 0 0)}
+.cine .sc-stack .stage-in{transform:scale(var(--fit,1))}
+/* Stack → Méthode : l'écran se retourne comme une carte (la Stack est le recto, Méthode le verso). */
+.cine .sc-method .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(2200px) translateZ(calc(var(--e,1) * (1 - var(--e,1)) * -2000px)) rotateY(calc(var(--e,1) * 180deg - 180deg));backface-visibility:hidden}
+.cine .sc-stack .cube-shade{opacity:calc(var(--x,0) * .7)}
+.cine .sc-method .cube-shade{opacity:calc((1 - var(--e,1)) * .7)}
+/* Stack — tableau d'affichage à palettes : 4 faces (vide, 2 brouillages, nom), chaque face en 2 demi-volets. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.flap{position:relative;height:68px;border-radius:10px;background:#1C1611;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 24px rgba(20,14,8,.18)}
+.flap::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#0B0806;z-index:20}
+.flap-h{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:#1C1611}
+.flap-h.top{top:0;border-radius:10px 10px 0 0;transform-origin:50% 100%}
+.flap-h.bot{bottom:0;border-radius:0 0 10px 10px;transform-origin:50% 0}
+.flap-h > span{position:absolute;left:0;right:0;height:68px;display:flex;align-items:center;padding:0 18px;font-family:'Fraunces',Georgia,serif;font-size:30px;font-weight:600;color:#F3EADD;letter-spacing:.01em;white-space:nowrap}
+.flap-h.top > span{top:0}
+.flap-h.bot > span{top:-34px}
+.flap-h.bot{background:#211A14}
+.flap-h.f0,.flap-h.f1,.flap-h.f2{display:none}
+.f0{--j:0}.f1{--j:1}.f2{--j:2}.f3{--j:3}
+.cine .flap-h.f0,.cine .flap-h.f1,.cine .flap-h.f2{display:block}
+.cine .flap-h.top{z-index:calc(10 - var(--j));transform:perspective(300px) rotateX(calc(-90deg * clamp(0, calc(6 * var(--t,0) - 2 * var(--j)), 1)))}
+.cine .flap-h.bot{z-index:calc(1 + var(--j));transform:perspective(300px) rotateX(calc(90deg * (1 - clamp(0, calc(6 * var(--t,0) - 2 * var(--j) + 1), 1))))}
+.cine .sc-method .stage-in{transform:scale(calc(var(--fit,1) * (1 - var(--x,0) * .08)));opacity:calc(1 - var(--x,0) * .7)}
+.cine .sc-contact .stage-in{transform:scale(var(--fit,1))}
+.cine .sc-contact .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh));clip-path:polygon(0 0,calc(var(--e,1) * 200%) 0,calc(var(--e,1) * 200% - 100%) 100%,0 100%)}
+
+/* Défilement horizontal des études de cas */
+.cine .track{flex-direction:row;gap:40px;width:max-content;padding:0 calc((100vw - min(860px, calc(100vw - 240px))) / 2) 0 120px;transform:translateX(calc(var(--p,0) * var(--shift,0px) * -1));transform-style:preserve-3d;pointer-events:none}
+.cine .track > *{pointer-events:auto}
+.cine .track > *{flex-shrink:0}
+.cine .case-intro{width:520px;justify-content:center}
+.cine .case{width:min(860px, calc(100vw - 240px))}
+/* Carrousel 3D : chaque carte arrive tournée et en retrait, passe à plat au premier plan, repart de l'autre côté.
+   --cz / --cr / --hf / --co sont calculés au scroll, --hx / --hy suivent la souris (inclinaison au survol). */
+.cine .case{will-change:transform;transform:translateZ(var(--cz,0px)) rotateY(calc(var(--cr,0deg) + var(--hx,0) * var(--hf,0) * 7deg)) rotateX(calc(var(--hy,0) * var(--hf,0) * -6deg));opacity:var(--co,1);box-shadow:0 30px 70px rgba(31,26,21,calc(var(--hf,0) * .16))}
+.cine .cases-bar{display:block;position:absolute;left:120px;right:120px;bottom:40px;height:3px;background:var(--line);z-index:2}
+.cine .cases-bar > div{height:100%;background:var(--terra);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+
+/* Apparitions : chaque élément a sa propre animation, calée sur la position de défilement (--t) */
+.cine [data-fx]{will-change:transform,opacity}
+.cine [data-fx="rise"]{opacity:var(--t,0);transform:translateY(calc((1 - var(--t,0)) * 80px))}
+.cine [data-fx="drop"]{opacity:var(--t,0);transform:translateY(calc((1 - var(--t,0)) * -70px))}
+.cine [data-fx="left"]{opacity:var(--t,0);transform:translateX(calc((1 - var(--t,0)) * -140px))}
+.cine [data-fx="right"]{opacity:var(--t,0);transform:translateX(calc((1 - var(--t,0)) * 140px))}
+.cine [data-fx="mask"]{clip-path:inset(calc((1 - var(--t,0)) * 100%) 0 0 0);transform:translateY(calc((1 - var(--t,0)) * 50px))}
+.cine [data-fx="wipe"]{clip-path:inset(0 calc((1 - var(--t,0)) * 100%) 0 0)}
+.cine [data-fx="curtain"]{clip-path:inset(0 0 0 calc((1 - var(--t,0)) * 100%))}
+.cine [data-fx="blur"]{opacity:var(--t,0);filter:blur(calc((1 - var(--t,0)) * 14px));transform:scale(calc(1.04 - var(--t,0) * .04))}
+.cine [data-fx="zoom"]{opacity:var(--t,0);transform:scale(calc(.55 + var(--t,0) * .45))}
+.cine [data-fx="pop"]{opacity:clamp(0,calc(var(--t,0) * 3),1);transform:scale(var(--t,0))}
+.cine [data-fx="flip"]{opacity:var(--t,0);transform:perspective(1000px) rotateY(calc((1 - var(--t,0)) * 80deg));transform-origin:0 50%}
+.cine [data-fx="swing"]{opacity:var(--t,0);transform:perspective(1000px) rotateX(calc((1 - var(--t,0)) * -80deg));transform-origin:50% 0}
+.cine [data-fx="spin"]{opacity:var(--t,0);transform:rotate(calc((1 - var(--t,0)) * -16deg)) scale(calc(.7 + var(--t,0) * .3))}
+.cine [data-fx="tilt"]{opacity:var(--t,0);transform:skewY(calc((1 - var(--t,0)) * 9deg)) translateY(calc((1 - var(--t,0)) * 90px))}
+.cine [data-fx="iris"]{clip-path:circle(calc(var(--t,0) * 75%) at 50% 50%)}
+.cine [data-fx="draw"]{transform:scaleX(var(--t,0));transform-origin:0 50%}
+.cine [data-fx="fade"]{opacity:var(--t,0)}
+/* Méthode — dominos : chaque étape, couchée vers l'arrière, se redresse quand la ligne dorée l'atteint. */
+.cine [data-fx="domino"]{transform-origin:50% 100%;transform:perspective(900px) rotateX(calc((1 - var(--t,0)) * 86deg));opacity:clamp(0, calc(var(--t,0) * 2.5), 1)}
+/* Méthode — la frise part posée sur un plan incliné (une route vue en perspective) et se redresse au fil du scroll. */
+.cine .road{transform-origin:50% 100%;transform:perspective(1100px) rotateX(calc((1 - clamp(0, calc((var(--p,0) - .02) / .45), 1)) * 58deg))}
+/* Services — jeu de cartes : empilées et inclinées au centre (A), ouverture en éventail (B), puis chaque carte se pose à plat à sa place (C).
+   --k = -1 / 0 / 1 : colonne de la carte par rapport au centre. */
+.cine [data-fx="deal"]{--A:clamp(0, calc(var(--t,0) / .25), 1);--B:clamp(0, calc((var(--t,0) - .25) / .3), 1);--C:clamp(0, calc((var(--t,0) - .55) / .45), 1);position:relative;z-index:calc(2 + var(--k,0));opacity:var(--A);transform-origin:50% 100%;transform:perspective(1200px) translateX(calc((var(--k,0) * -1 * (100% + 24px) + var(--k,0) * 90px * var(--B)) * (1 - var(--C)))) translateY(calc(var(--B) * (1 - var(--C)) * -24px)) rotateX(calc((1 - var(--C)) * 26deg)) rotateZ(calc(var(--k,0) * (4deg + 10deg * var(--B)) * (1 - var(--C)))) scale(calc((.8 + .2 * var(--A)) * (.88 + .12 * var(--C))));box-shadow:0 calc(18px + 22px * (1 - var(--C))) 50px rgba(31,26,21,calc(.08 + .14 * (1 - var(--C))))}
+
+.ic-dark,.ic-light{display:contents}
+.pf-light .ic-dark,.pf-dark .ic-light{display:none}
+</style>
+</head>
+<body>
+<div class="pf-root pf-light" style="width: 100%; display: flex; flex-direction: column; background: var(--backdrop, var(--bg)); color: var(--ink); position: relative; overflow-x: clip">
+<svg width="0" height="0" aria-hidden="true" style="position: absolute">
+<defs>
+<pattern id="pf-kita" width="96" height="96" patternUnits="userSpaceOnUse">
+<rect x="0" y="6" width="44" height="6" fill="currentColor"></rect>
+<rect x="0" y="20" width="44" height="6" style="fill: var(--ocre)"></rect>
+<rect x="0" y="34" width="44" height="6" fill="currentColor"></rect>
+<polygon points="52,42 72,8 92,42" style="fill: var(--green)"></polygon>
+<rect x="6" y="52" width="6" height="40" style="fill: var(--ocre)"></rect>
+<rect x="20" y="52" width="6" height="40" fill="currentColor"></rect>
+<rect x="34" y="52" width="6" height="40" style="fill: var(--ocre)"></rect>
+<rect x="52" y="52" width="18" height="18" fill="currentColor"></rect>
+<rect x="74" y="74" width="18" height="18" style="fill: var(--green)"></rect>
+</pattern>
+<pattern id="pf-losange" width="44" height="44" patternUnits="userSpaceOnUse">
+<polygon points="22,4 40,22 22,40 4,22" fill="none" stroke="currentColor" stroke-width="1.5"></polygon>
+<polygon points="22,16 28,22 22,28 16,22" fill="currentColor"></polygon>
+</pattern>
+<pattern id="pf-zigzag" width="28" height="20" patternUnits="userSpaceOnUse">
+<polyline points="0,16 7,4 14,16 21,4 28,16" fill="none" stroke="currentColor" stroke-width="2.5"></polyline>
+</pattern>
+</defs>
+</svg>
+
+<!-- NAV -->
+<header class="pf-nav" style="height: 88px; margin-bottom: -88px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 120px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50; background: var(--nav-bg); backdrop-filter: blur(10px)">
+<a href="#top" style="display: flex; align-items: center; gap: 12px">
+<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="0" y="0" width="14" height="14" rx="2" style="fill: var(--terra)"></rect><rect x="18" y="0" width="14" height="14" rx="2" style="fill: var(--ocre)"></rect><rect x="0" y="18" width="14" height="14" rx="2" style="fill: var(--green)"></rect><rect x="18" y="18" width="14" height="14" rx="2" style="fill: var(--terra)"></rect></svg>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Jaurès</span>
+</a>
+<nav aria-label="Navigation principale" style="display: flex; align-items: center; gap: 36px; font-size: 16px; font-weight: 600">
+<a href="#cas">Études de cas</a>
+<a href="#services">Services</a>
+<a href="#stack">Stack</a>
+<a href="#methode">Méthode</a>
+<a href="#contact">Contact</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 12px">
+<button type="button" data-ref="theme" aria-label="Changer de thème"  style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<span class="ic-dark">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+</span>
+<span class="ic-light">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</span>
+</button>
+<a class="pf-btn pf-btn-primary" href="https://wa.me/225XXXXXXXXXX" style="height: 44px; padding: 0 22px; border-radius: 999px; background: var(--terra); display: flex; align-items: center; font-size: 15px; font-weight: 700">Parlons projet</a>
+</div>
+</header>
+
+<!-- ============ SCÈNE 1 · HERO ============ -->
+<div id="top" class="sc sc-hero" data-scene="hero" data-hs="0" data-he="0">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 640px; height: 120%; color: var(--terra); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pf-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; align-items: center; gap: 80px">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; flex-direction: column; gap: clamp(14px, 2.6vh, 28px)">
+<div data-fx="left" data-intro="0" style="display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">
+<span style="width: 32px; height: 3px; background: var(--ocre); border-radius: 2px"></span>
+Développeur fullstack &amp; chef de projet IT · Abidjan
+</div>
+<h1 data-fx="blur" data-intro="150" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(44px, min(5vw, 7.6vh), 72px); line-height: 1.04; font-weight: 600; letter-spacing: -0.025em">Votre projet web, cadré, construit et livré par <span style="color: var(--terra); font-style: italic">un seul interlocuteur.</span></h1>
+<p data-fx="drop" data-intro="400" style="margin: 0; font-size: clamp(16px, 2.3vh, 20px); line-height: 1.6; color: var(--muted); max-width: 620px">Je suis Jaurès. J'accompagne entreprises, institutions et startups de l'idée à la mise en ligne : plateformes d'inscription, outils RH, applications métier — ici en Côte d'Ivoire comme pour la diaspora.</p>
+<div data-fx="zoom" data-intro="600" style="display: flex; align-items: center; gap: 16px; padding-top: 8px; transform-origin: 0 50%">
+<a class="pf-btn pf-btn-primary" href="https://wa.me/225XXXXXXXXXX" style="height: 56px; padding: 0 28px; border-radius: 999px; background: var(--terra); display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path></svg>
+Discuter de votre projet
+</a>
+<a class="pf-btn pf-btn-ghost" href="#cas" style="height: 56px; padding: 0 26px; border-radius: 999px; border: 1.5px solid var(--ink); display: flex; align-items: center; font-size: 17px; font-weight: 700">Voir les études de cas</a>
+</div>
+<div data-fx="wipe" data-intro="800" style="display: flex; flex-wrap: wrap; column-gap: 28px; row-gap: 8px; padding-top: 8px; font-size: 14px; font-weight: 600; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--terra); transform: rotate(45deg)"></span>Laravel · React · TypeScript</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--ocre); transform: rotate(45deg)"></span>Basé à Abidjan</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 8px; height: 8px; background: var(--green); transform: rotate(45deg)"></span>Missions à distance ou sur site</span>
+</div>
+</div>
+<div class="ph-scene" style="width: min(420px, 30vw); height: min(520px, 60vh); flex-shrink: 0; position: relative">
+<div class="ph-tilt" data-tilt="" style="position: absolute; inset: 0">
+<!-- Plan 1 (fond) : cadre au motif kita -->
+<div class="ph-layer" style="position: absolute; inset: 0; transform: translateZ(-50px)">
+<div data-fx="iris" data-intro="250" style="position: absolute; inset: 0; border-radius: 210px 210px 28px 28px; overflow: hidden; background: var(--surface-2); box-shadow: 0 30px 60px rgba(31,26,21,0.16)">
+<svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; color: var(--terra); opacity: 0.55"><rect width="100%" height="100%" fill="url(#pf-kita)"></rect></svg>
+</div>
+</div>
+<!-- Plan 2 (milieu) : la photo -->
+<div class="ph-layer" style="position: absolute; left: 34px; right: 34px; top: 34px; bottom: 34px; transform: translateZ(30px)">
+<div data-fx="mask" data-intro="550" style="position: absolute; inset: 0; border-radius: 180px 180px 18px 18px; background: var(--surface); border: 2px dashed var(--line); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--muted); box-shadow: 0 16px 36px rgba(31,26,21,0.12)">[Votre photo]</div>
+</div>
+<!-- Plan 3 (avant) : carte « Double casquette » -->
+<div class="ph-layer" style="position: absolute; left: -20px; bottom: 40px; width: 260px; transform: translateZ(90px)">
+<div data-fx="right" data-intro="1000" style="padding: 20px 22px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 48px rgba(31,26,21,0.2); display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Double casquette</div>
+<div style="font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.25">Le code et le pilotage, sans intermédiaire.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="scroll-hint" data-fx="fade" data-intro="1400" data-at="0 0.15" data-rev="" style="position: absolute; left: 50%; bottom: 28px; margin-left: -60px; width: 120px; flex-direction: column; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); z-index: 2">
+Défiler
+<span style="width: 2px; height: 36px; background: var(--terra); border-radius: 2px"></span>
+</div>
+</section>
+</div>
+
+<!-- ============ SCÈNE 2 · ÉTUDES DE CAS (défilement horizontal, ouverture en iris) ============ -->
+<div id="cas" class="sc sc-cases" data-scene="cases" data-hs="0.04" data-he="0.12">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--green); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pf-kita)"></rect></svg>
+<div class="stage-in">
+<div class="track" data-track="">
+<div class="case-intro" style="display: flex; flex-direction: column; gap: 20px">
+<div data-fx="left" data-src="e" data-at="0.5 0.85" style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Études de cas</div>
+<h2 data-fx="mask" data-src="e" data-at="0.6 1" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 52px; line-height: 1.08; font-weight: 600; letter-spacing: -0.02em">Des problèmes concrets, des solutions sur mesure.</h2>
+<p data-fx="fade" data-src="e" data-at="0.75 1" style="margin: 0; font-size: 18px; line-height: 1.6; color: var(--muted)">Quatre projets, quatre contextes : l'événementiel, le recrutement, l'emploi dans la diaspora et l'automatisation par l'IA.</p>
+<div data-fx="curtain" data-src="e" data-at="0.85 1" style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 700; color: var(--terra-strong)">Continuez à défiler <svg width="40" height="14" viewBox="0 0 40 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 7h36M31 1l6 6-6 6"></path></svg></div>
+</div>
+
+<!-- 01 FODESE -->
+<article class="case" style="padding: 40px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+<div style="display: flex; align-items: baseline; gap: 18px">
+<span data-fx="pop" data-axis="x" data-ease="back" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 400; color: var(--muted); line-height: 1">01</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 data-fx="mask" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em">FODESE</h3>
+<div data-fx="wipe" data-axis="x" data-at="0.45 0.75" style="font-size: 14px; font-weight: 600; color: var(--muted)">Plateforme événementielle multi-villes</div>
+</div>
+</div>
+<div data-fx="curtain" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 360px">
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">PHP</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">MySQL</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">QR codes</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Mailgun</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<div data-fx="left" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Un forum organisé dans plusieurs villes devait gérer inscriptions, badges, accueil et suivi des participants sans perdre le fil d'une ville à l'autre.</p>
+</div>
+<div data-fx="rise" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Une plateforme multi-modules : inscriptions en ligne, badges QR automatiques, e-mails transactionnels, relance des absents, suivi des visites de stands et tableaux de bord statistiques.</p>
+</div>
+<div data-fx="right" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">L'édition 2026 opérée à Yamoussoukro, Bouaké et San-Pédro sur une seule plateforme, avec un formulaire express pour le personnel le jour J.</p>
+<div data-fx="zoom" data-axis="x" data-at="0.8 1" style="margin-top: 6px; align-self: flex-start; padding: 8px 14px; border-radius: 10px; background: var(--surface-2); font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600">3 villes · [N] inscrits</div>
+</div>
+</div>
+</article>
+
+<!-- 02 EMPOWER CV -->
+<article class="case" style="padding: 40px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+<div style="display: flex; align-items: baseline; gap: 18px">
+<span data-fx="spin" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 400; color: var(--muted); line-height: 1">02</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 data-fx="blur" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em">Empower CV</h3>
+<div data-fx="fade" data-axis="x" data-at="0.45 0.75" style="font-size: 14px; font-weight: 600; color: var(--muted)">Parsing &amp; matching sémantique de CV</div>
+</div>
+</div>
+<div data-fx="wipe" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 360px">
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Laravel API</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">React</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">pgvector</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Embeddings</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<div data-fx="swing" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Comparer des dizaines de CV à chaque offre, à la main, prend du temps et reste subjectif — les bons profils passent entre les mailles.</p>
+</div>
+<div data-fx="zoom" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Un service qui extrait les CV puis les compare aux offres par similarité sémantique (embeddings OpenAI, pgvector sur Supabase), exposé par une API REST Laravel et une interface React.</p>
+</div>
+<div data-fx="flip" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Pour chaque offre, un classement des candidats par pertinence, consultable depuis une interface simple par l'équipe RH.</p>
+<div data-fx="pop" data-axis="x" data-ease="back" data-at="0.8 1" style="margin-top: 6px; align-self: flex-start; padding: 8px 14px; border-radius: 10px; background: var(--surface-2); font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600">[X] % de temps de tri gagné</div>
+</div>
+</div>
+</article>
+
+<!-- 03 DIASPOJOB -->
+<article class="case" style="padding: 40px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+<div style="display: flex; align-items: baseline; gap: 18px">
+<span data-fx="drop" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 400; color: var(--muted); line-height: 1">03</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 data-fx="wipe" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em">DiaspoJob</h3>
+<div data-fx="rise" data-axis="x" data-at="0.45 0.75" style="font-size: 14px; font-weight: 600; color: var(--muted)">Plateforme d'emploi pour la diaspora africaine</div>
+</div>
+</div>
+<div data-fx="zoom" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 360px">
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Laravel</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Inertia</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">React</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">React Native</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<div data-fx="tilt" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Les talents de la diaspora et les recruteurs du continent se croisent mal sur des job boards généralistes, pensés pour d'autres marchés.</p>
+</div>
+<div data-fx="mask" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Une plateforme dédiée en Laravel, Inertia et React : design responsive, partage social, rotation d'annonces sponsorisées et SEO soigné, optimisée pour un hébergement mutualisé.</p>
+</div>
+<div data-fx="blur" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Une plateforme web responsive, prolongée par une application mobile React Native préparée pour le Google Play Store.</p>
+<div data-fx="curtain" data-axis="x" data-at="0.8 1" style="margin-top: 6px; align-self: flex-start; padding: 8px 14px; border-radius: 10px; background: var(--surface-2); font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600">Web + mobile Android</div>
+</div>
+</div>
+</article>
+
+<!-- 04 CV-OFFRE MATCHER -->
+<article class="case" style="padding: 40px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+<div style="display: flex; align-items: baseline; gap: 18px">
+<span data-fx="zoom" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 40px; font-weight: 400; color: var(--muted); line-height: 1">04</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 data-fx="swing" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em">CV-Offre Matcher</h3>
+<div data-fx="curtain" data-axis="x" data-at="0.45 0.75" style="font-size: 14px; font-weight: 600; color: var(--muted)">Génération de prospects par l'IA</div>
+</div>
+</div>
+<div data-fx="rise" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 360px">
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Python</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">OCR</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">LLM</span>
+<span style="padding: 5px 12px; border-radius: 999px; background: var(--surface-2); font-size: 14px; font-weight: 600">Excel</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<div data-fx="drop" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Un cabinet de recrutement et de formation disposait d'environ 8 000 CV en PDF, sans moyen rapide d'y repérer des prospects pour ses programmes.</p>
+</div>
+<div data-fx="curtain" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Un pipeline par lots : extraction de texte et OCR, pré-filtrage par mots-clés, classification par LLM (Claude Haiku) puis scoring de chaque profil.</p>
+</div>
+<div data-fx="spin" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">Des listes de prospects notées, livrées en Excel, directement exploitables par l'équipe commerciale.</p>
+<div data-fx="iris" data-axis="x" data-at="0.8 1" style="margin-top: 6px; align-self: flex-start; padding: 8px 14px; border-radius: 10px; background: var(--surface-2); font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 600">≈ 8 000 CV analysés</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+<div class="cases-bar" aria-hidden="true"><div></div></div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+
+<!-- ============ SCÈNE 3 · SERVICES (glisse par-dessus, bord kita) ============ -->
+<div id="services" class="sc sc-services" data-scene="services" data-hs="0" data-he="0.2">
+<section class="stage" style="background: var(--surface-2)">
+<svg aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 20px; color: var(--ocre); opacity: 0.7; z-index: 2"><rect width="100%" height="20" fill="url(#pf-zigzag)"></rect></svg>
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--terra); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pf-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 44px">
+<div style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<div data-fx="drop" data-src="e" data-at="0.45 0.8" style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Services</div>
+<h2 data-fx="blur" data-src="e" data-at="0.55 0.95" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 52px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Trois façons de faire avancer votre projet.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+<div data-fx="deal" data-at="0 0.6" style="--k: -1; padding: 32px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px">
+<div data-fx="pop" data-ease="back" data-at="0.6 0.72" style="width: 56px; height: 56px; border-radius: 16px; background: var(--terra); color: var(--terra-ink); display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"></path></svg>
+</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Développement web sur mesure</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink)">Applications métier, plateformes d'inscription, espaces membres et back-offices. Du code maintenable, un déploiement maîtrisé — y compris sur hébergement mutualisé.</p>
+<ul style="margin: 0; padding: 16px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 500; color: var(--muted)">
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Applications Laravel · Inertia · React</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Back-offices &amp; tableaux de bord</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Mise en ligne &amp; maintenance</li>
+</ul>
+</div>
+<div data-fx="deal" data-at="0.03 0.63" style="--k: 0; padding: 32px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px">
+<div data-fx="spin" data-at="0.66 0.78" style="width: 56px; height: 56px; border-radius: 16px; background: var(--ocre); color: #1F1A15; display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1M9 11h6M9 15h4"></path></svg>
+</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Pilotage de projet IT</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink)">Je traduis vos besoins en cahier des charges clair, je modélise vos données et vos processus, puis je coordonne jusqu'à la livraison.</p>
+<ul style="margin: 0; padding: 16px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 500; color: var(--muted)">
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Cadrage &amp; cahier des charges</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Modélisation MERISE (MCD, MCT, MOT)</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Suivi, recette &amp; formation</li>
+</ul>
+</div>
+<div data-fx="deal" data-at="0.06 0.66" style="--k: 1; padding: 32px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px">
+<div data-fx="zoom" data-at="0.72 0.84" style="width: 56px; height: 56px; border-radius: 16px; background: var(--green); color: var(--bg); display: flex; align-items: center; justify-content: center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"></circle><circle cx="18" cy="6" r="2.5"></circle><circle cx="12" cy="18" r="2.5"></circle><path d="M8 7.5l2.8 8M16 7.5l-2.8 8M8.5 6h7"></path></svg>
+</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">IA &amp; automatisation des données</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink)">Extraction de documents, matching sémantique, classification par LLM : j'intègre l'IA là où elle vous fait réellement gagner du temps.</p>
+<ul style="margin: 0; padding: 16px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 500; color: var(--muted)">
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Traitement de CV &amp; PDF en masse</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Matching par embeddings</li>
+<li style="display: flex; align-items: center; gap: 10px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Pipelines &amp; exports Excel</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+
+<!-- ============ SCÈNE 4 · STACK (volet horizontal) ============ -->
+<div id="stack" class="sc sc-stack" data-scene="stack" data-hs="0" data-he="0.25">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--ocre); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pf-zigzag)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 44px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div data-fx="wipe" data-at="0 0.15" style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Stack technique</div>
+<h2 data-fx="mask" data-at="0.05 0.3" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 52px; line-height: 1.05; font-weight: 600; letter-spacing: -0.02em">Des outils modernes, maîtrisés.</h2>
+</div>
+<p data-fx="fade" data-at="0.2 0.4" style="margin: 0; max-width: 380px; font-size: 18px; line-height: 1.6; color: var(--muted)">Un socle cohérent du back-end à l'interface, pour des applications rapides à faire évoluer.</p>
+</div>
+<div>
+<div data-fx="draw" data-at="0.25 0.5" style="height: 2px; background: var(--ink)"></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+<div style="overflow: hidden; padding: 28px 24px 28px 0; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">Laravel</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.3 0.5" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>X7#Q·R2</span></div><div class="flap-h bot f1"><span>X7#Q·R2</span></div><div class="flap-h top f2"><span>LA4AV3L</span></div><div class="flap-h bot f2"><span>LA4AV3L</span></div><div class="flap-h top f3"><span>Laravel</span></div><div class="flap-h bot f3"><span>Laravel</span></div></div><div data-fx="fade" data-at="0.50 0.60" style="font-size: 14px; color: var(--muted)">Back-end &amp; API</div></div></div>
+<div style="overflow: hidden; padding: 28px 24px 28px 32px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">React</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.36 0.56" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Q#9·Z</span></div><div class="flap-h bot f1"><span>Q#9·Z</span></div><div class="flap-h top f2"><span>RE4CT</span></div><div class="flap-h bot f2"><span>RE4CT</span></div><div class="flap-h top f3"><span>React</span></div><div class="flap-h bot f3"><span>React</span></div></div><div data-fx="fade" data-at="0.56 0.66" style="font-size: 14px; color: var(--muted)">Interfaces</div></div></div>
+<div style="overflow: hidden; padding: 28px 24px 28px 32px; border-bottom: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">TypeScript</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.42 0.62" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>#K2·X9QW7Z</span></div><div class="flap-h bot f1"><span>#K2·X9QW7Z</span></div><div class="flap-h top f2"><span>TYP3SCR1PT</span></div><div class="flap-h bot f2"><span>TYP3SCR1PT</span></div><div class="flap-h top f3"><span>TypeScript</span></div><div class="flap-h bot f3"><span>TypeScript</span></div></div><div data-fx="fade" data-at="0.62 0.72" style="font-size: 14px; color: var(--muted)">Code typé et fiable</div></div></div>
+<div style="overflow: hidden; padding: 28px 24px 28px 0; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">Inertia</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.48 0.68" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Z9#·QK2</span></div><div class="flap-h bot f1"><span>Z9#·QK2</span></div><div class="flap-h top f2"><span>1NERT1A</span></div><div class="flap-h bot f2"><span>1NERT1A</span></div><div class="flap-h top f3"><span>Inertia</span></div><div class="flap-h bot f3"><span>Inertia</span></div></div><div data-fx="fade" data-at="0.68 0.78" style="font-size: 14px; color: var(--muted)">Le pont Laravel ↔ React</div></div></div>
+<div style="overflow: hidden; padding: 28px 24px 28px 32px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">MySQL</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.54 0.74" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>#Q7·K</span></div><div class="flap-h bot f1"><span>#Q7·K</span></div><div class="flap-h top f2"><span>MY5QL</span></div><div class="flap-h bot f2"><span>MY5QL</span></div><div class="flap-h top f3"><span>MySQL</span></div><div class="flap-h bot f3"><span>MySQL</span></div></div><div data-fx="fade" data-at="0.74 0.84" style="font-size: 14px; color: var(--muted)">Données structurées</div></div></div>
+<div style="overflow: hidden; padding: 28px 24px 28px 32px; border-bottom: 1px solid var(--line); box-sizing: border-box"><div style="display: flex; flex-direction: column; gap: 12px"><span class="sr-only">Tailwind</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.6 0.8" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Q#7·ZK9X</span></div><div class="flap-h bot f1"><span>Q#7·ZK9X</span></div><div class="flap-h top f2"><span>TA1LW1ND</span></div><div class="flap-h bot f2"><span>TA1LW1ND</span></div><div class="flap-h top f3"><span>Tailwind</span></div><div class="flap-h bot f3"><span>Tailwind</span></div></div><div data-fx="fade" data-at="0.80 0.90" style="font-size: 14px; color: var(--muted)">UI cohérente</div></div></div>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+
+<!-- ============ SCÈNE 5 · MÉTHODE (le panneau vert s'ouvre depuis une carte) ============ -->
+<div id="methode" class="sc sc-method" data-scene="method" data-hs="0" data-he="0.18">
+<section class="stage" style="background: var(--method-bg); color: var(--on-dark)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: #F6EFE4; opacity: 0.07"><rect width="100%" height="100%" fill="url(#pf-kita)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<div data-fx="fade" data-src="e" data-at="0.6 0.85" style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #E3A93A">Méthode de travail</div>
+<h2 data-fx="swing" data-src="e" data-at="0.65 1" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 52px; line-height: 1.08; font-weight: 600; letter-spacing: -0.02em">Cinq étapes, zéro surprise.</h2>
+</div>
+<div class="road" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 24px; row-gap: 18px; grid-template-rows: auto auto auto; position: relative; margin-right: -64px">
+<div style="position: absolute; left: 28px; right: calc((100% - 96px) / 5 - 28px); top: 27px; height: 2px; background: rgba(246,239,228,0.18)"></div>
+<div data-fx="draw" data-ease="linear" data-at="0.15 0.92" style="position: absolute; left: 28px; right: calc((100% - 96px) / 5 - 28px); top: 27px; height: 2px; background: #E3A93A"></div>
+<div data-fx="domino" data-ease="back" data-at="0.15 0.25" style="display: grid; grid-row: span 3; grid-template-rows: subgrid; position: relative">
+<div style="width: 56px; height: 56px; border-radius: 999px; background: #E07A4F; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600">01</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Écoute</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark-muted)">Un premier échange pour comprendre vos objectifs, vos utilisateurs et vos contraintes.</p>
+</div>
+<div data-fx="domino" data-ease="back" data-at="0.34 0.44" style="display: grid; grid-row: span 3; grid-template-rows: subgrid; position: relative">
+<div style="width: 56px; height: 56px; border-radius: 999px; background: #E3A93A; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600">02</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Cadrage</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark-muted)">Périmètre, modélisation des données, planning et devis détaillé, validés ensemble.</p>
+</div>
+<div data-fx="domino" data-ease="back" data-at="0.53 0.63" style="display: grid; grid-row: span 3; grid-template-rows: subgrid; position: relative">
+<div style="width: 56px; height: 56px; border-radius: 999px; background: #F6EFE4; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600">03</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Maquettes</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark-muted)">Parcours et écrans validés avec vous avant la moindre ligne de code.</p>
+</div>
+<div data-fx="domino" data-ease="back" data-at="0.72 0.82" style="display: grid; grid-row: span 3; grid-template-rows: subgrid; position: relative">
+<div style="width: 56px; height: 56px; border-radius: 999px; background: #E3A93A; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600">04</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Développement</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark-muted)">Des livraisons régulières que vous testez au fil de l'eau, avec un point d'avancement clair.</p>
+</div>
+<div data-fx="domino" data-ease="back" data-at="0.91 1" style="display: grid; grid-row: span 3; grid-template-rows: subgrid; position: relative">
+<div style="width: 56px; height: 56px; border-radius: 999px; background: #E07A4F; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600">05</div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.2">Mise en ligne &amp; suivi</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--on-dark-muted)">Déploiement, formation de vos équipes, puis maintenance et évolutions.</p>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+
+<!-- ============ SCÈNE 6 · CONTACT (balayage en diagonale) ============ -->
+<div id="contact" class="sc sc-contact" data-scene="contact" data-hs="0" data-he="0.15" data-last="">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--green); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pf-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 40px">
+<div data-fx="zoom" data-at="0 0.25" style="position: relative; border-radius: 32px; overflow: hidden; background: var(--contact-bg); color: var(--on-dark); padding: 72px 80px; display: flex; justify-content: space-between; align-items: center; gap: 64px">
+<svg data-fx="curtain" data-at="0.1 0.5" aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 420px; height: 100%; color: #F6EFE4; opacity: 0.16"><rect width="100%" height="100%" fill="url(#pf-kita)"></rect></svg>
+<div style="display: flex; flex-direction: column; gap: 22px; max-width: 640px; position: relative">
+<div data-fx="drop" data-at="0.15 0.3" style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Contact</div>
+<h2 data-fx="blur" data-at="0.2 0.45" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 52px; line-height: 1.02; font-weight: 600; letter-spacing: -0.02em">Parlons de votre projet.</h2>
+<p data-fx="rise" data-at="0.35 0.52" style="margin: 0; font-size: 18px; line-height: 1.6; color: var(--on-dark-muted)">Une idée, un cahier des charges ou simplement une question ? Écrivez-moi sur WhatsApp : on en discute, sans engagement.</p>
+<div style="display: flex; align-items: center; gap: 24px; padding-top: 8px">
+<div data-fx="pop" data-ease="back" data-at="0.48 0.62" style="transform-origin: 0 50%">
+<a class="pf-btn pf-btn-wa" href="https://wa.me/225XXXXXXXXXX" style="height: 60px; padding: 0 30px; border-radius: 999px; background: #F6EFE4; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path><path d="M9 9.5c.3 1.9 1.6 3.3 3.5 4l1-1 2 1c-.2 1-1 1.6-2 1.5-3-.3-5.3-2.6-5.6-5.6-.1-1 .5-1.8 1.5-2l1 2z"></path></svg>
+Écrire sur WhatsApp
+</a>
+</div>
+<a class="pf-mail" data-fx="wipe" data-at="0.56 0.7" href="mailto:yaojauresvianney@gmail.com" style="font-size: 16px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px">yaojauresvianney@gmail.com</a>
+</div>
+</div>
+<div data-fx="flip" data-at="0.6 0.78" style="width: 300px; flex-shrink: 0; padding: 28px; border-radius: 20px; background: rgba(21,17,13,0.28); display: flex; flex-direction: column; gap: 20px; position: relative">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Localisation</div><div style="font-size: 16px; font-weight: 600">Abidjan, Côte d'Ivoire</div></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Fuseau</div><div style="font-size: 16px; font-weight: 600">GMT (UTC+0)</div></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Disponibilité</div><div style="font-size: 16px; font-weight: 600">[Votre disponibilité]</div></div>
+</div>
+</div>
+<footer data-fx="rise" data-at="0.75 0.92" style="display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted)">
+<span>© 2026 Jaurès — Développeur fullstack &amp; chef de projet IT</span>
+<span style="display: flex; align-items: center; gap: 10px"><svg width="40" height="12" aria-hidden="true" style="color: var(--ocre)"><rect width="40" height="12" fill="url(#pf-zigzag)"></rect></svg>Conçu et codé à Abidjan</span>
+</footer>
+</div>
+</section>
+</div>
+</div>
+
+<script>
+class DCLogic { constructor(){this.props={};this.state={};} setState(o){Object.assign(this.state,o);} }
+class Component extends DCLogic {
+  componentDidMount() {
+    if (this.props.cine === false) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // The film mode needs a real, scrolling viewport (focused / full-page view).
+    // On the canvas the artboard is laid out statically, fully visible.
+    const doc = document.documentElement;
+    if (window.innerHeight > 1600 || doc.scrollHeight <= window.innerHeight * 1.2) return;
+    this.setState({ cine: true });
+    this._boot = setTimeout(() => this.setupFilm(), 60);
+  }
+  componentWillUnmount() {
+    clearTimeout(this._boot);
+    if (this._onScroll) {
+      document.removeEventListener('scroll', this._onScroll, true);
+      window.removeEventListener('resize', this._onResize);
+    }
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onMouse) {
+      window.removeEventListener('mousemove', this._onMouse);
+      document.documentElement.removeEventListener('mouseleave', this._onLeave);
+    }
+    if (this._tiltRaf) cancelAnimationFrame(this._tiltRaf);
+    if (this._cardRaf) cancelAnimationFrame(this._cardRaf);
+    (this._cardHandlers || []).forEach((h) => {
+      h.card.removeEventListener('mousemove', h.move);
+      h.card.removeEventListener('mouseleave', h.leave);
+    });
+  }
+  setupTilt() {
+    // Mouse-driven tilt of the hero photo (desktop pointers only).
+    this._tiltEl = document.querySelector('[data-tilt]');
+    if (!this._tiltEl || !window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    this._m = { x: 0, y: 0, tx: 0, ty: 0 };
+    this._onMouse = (ev) => {
+      this._m.tx = (ev.clientX / window.innerWidth) * 2 - 1;
+      this._m.ty = (ev.clientY / window.innerHeight) * 2 - 1;
+      this._tiltLoop();
+    };
+    this._onLeave = () => { this._m.tx = 0; this._m.ty = 0; this._tiltLoop(); };
+    window.addEventListener('mousemove', this._onMouse, { passive: true });
+    document.documentElement.addEventListener('mouseleave', this._onLeave);
+  }
+  setupCards() {
+    this._cards = Array.prototype.slice.call(document.querySelectorAll('#cas .case'));
+    this._cardTilt = this._cards.map(() => ({ x: 0, y: 0, tx: 0, ty: 0 }));
+    if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    this._cardHandlers = this._cards.map((card, i) => {
+      const move = (ev) => {
+        const r = card.getBoundingClientRect();
+        this._cardTilt[i].tx = ((ev.clientX - r.left) / r.width) * 2 - 1;
+        this._cardTilt[i].ty = ((ev.clientY - r.top) / r.height) * 2 - 1;
+        this._cardLoop();
+      };
+      const leave = () => { this._cardTilt[i].tx = 0; this._cardTilt[i].ty = 0; this._cardLoop(); };
+      card.addEventListener('mousemove', move);
+      card.addEventListener('mouseleave', leave);
+      return { card: card, move: move, leave: leave };
+    });
+  }
+  _cardLoop() {
+    if (this._cardRaf) return;
+    const step = () => {
+      let moving = false;
+      this._cards.forEach((card, i) => {
+        const t = this._cardTilt[i];
+        t.x += (t.tx - t.x) * 0.1;
+        t.y += (t.ty - t.y) * 0.1;
+        if (Math.abs(t.tx - t.x) > 0.001 || Math.abs(t.ty - t.y) > 0.001) moving = true;
+        card.style.setProperty('--hx', t.x.toFixed(4));
+        card.style.setProperty('--hy', t.y.toFixed(4));
+      });
+      this._cardRaf = moving ? requestAnimationFrame(step) : null;
+    };
+    this._cardRaf = requestAnimationFrame(step);
+  }
+  _coverflow(vw) {
+    // Position of each card relative to the screen centre: d = 0 centred, ±1 half a screen away.
+    if (!this._cards || !this._track) return;
+    const trackLeft = this._track.getBoundingClientRect().left;
+    const smooth = (t) => t * t * (3 - 2 * t);
+    this._cards.forEach((card) => {
+      const centre = trackLeft + card.offsetLeft + card.offsetWidth / 2;
+      const d = (centre - vw / 2) / (vw / 2);
+      const a = Math.min(1, Math.abs(d));
+      const rot = (d < 0 ? -1 : 1) * 35 * smooth(a);          // tournée ~35° sur les côtés, à plat au centre
+      const z = -230 * smooth(Math.min(1, Math.abs(d) / 1.2));  // en retrait sur les côtés
+      const focus = Math.max(0, 1 - Math.abs(d) * 1.6);         // 1 = carte au premier plan
+      const op = 1 - Math.min(0.45, Math.max(0, Math.abs(d) - 0.7) * 0.6);
+      card.style.setProperty('--cr', rot.toFixed(3) + 'deg');
+      card.style.setProperty('--cz', z.toFixed(1) + 'px');
+      card.style.setProperty('--hf', focus.toFixed(3));
+      card.style.setProperty('--co', op.toFixed(3));
+    });
+  }
+  _tiltLoop() {
+    if (this._tiltRaf) return;
+    const step = () => {
+      const m = this._m;
+      m.x += (m.tx - m.x) * 0.08;
+      m.y += (m.ty - m.y) * 0.08;
+      this._tiltEl.style.setProperty('--mx', m.x.toFixed(4));
+      this._tiltEl.style.setProperty('--my', m.y.toFixed(4));
+      if (Math.abs(m.tx - m.x) > 0.001 || Math.abs(m.ty - m.y) > 0.001) {
+        this._tiltRaf = requestAnimationFrame(step);
+      } else {
+        this._tiltRaf = null;
+      }
+    };
+    this._tiltRaf = requestAnimationFrame(step);
+  }
+  setupFilm() {
+    const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    this._clamp = clamp;
+    this._scenes = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+    this._fx = Array.prototype.slice.call(document.querySelectorAll('[data-fx]')).map((el) => {
+      const at = (el.getAttribute('data-at') || '0 1').split(' ').map(Number);
+      return {
+        el: el,
+        scene: el.closest('[data-scene]'),
+        a: at[0], b: at[1],
+        rev: el.hasAttribute('data-rev'),
+        hasAt: el.hasAttribute('data-at'),
+        intro: el.hasAttribute('data-intro') ? Number(el.getAttribute('data-intro')) : null,
+        ease: el.getAttribute('data-ease') || 'out',
+        axis: el.getAttribute('data-axis'),
+        card: el.closest('.case'),
+        src: el.getAttribute('data-src') || 'p'
+      };
+    });
+    this._track = document.querySelector('[data-track]');
+    this.setupCards();
+    this._start = performance.now();
+    this._measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this._measure(); this._request(); });
+    this._onScroll = () => this._request();
+    this._onResize = () => { this._measure(); this._request(); };
+    document.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._tick();
+    this.setupTilt();
+  }
+  _measure() {
+    // Shrink a scene slightly when the window is too short for it, so nothing hides under the menu.
+    const avail = window.innerHeight - 136;
+    (this._scenes || []).forEach((s) => {
+      const si = s.querySelector('.stage-in');
+      if (!si || s.getAttribute('data-scene') === 'cases') return;
+      const fit = Math.min(1, avail / Math.max(1, si.offsetHeight));
+      si.style.setProperty('--fit', fit.toFixed(4));
+    });
+    if (this._track) {
+      const shift = Math.max(0, this._track.offsetWidth - window.innerWidth);
+      this._track.style.setProperty('--shift', shift + 'px');
+    }
+  }
+  _request() {
+    if (this._pending) return;
+    this._pending = true;
+    this._raf = requestAnimationFrame(() => { this._pending = false; this._update(); });
+  }
+  _tick() {
+    this._update();
+    if (performance.now() - this._start < 2600) {
+      this._raf = requestAnimationFrame(() => this._tick());
+    }
+  }
+  _ease(t, kind) {
+    if (kind === 'linear') return t;
+    if (kind === 'back') { const c1 = 1.70158, c3 = c1 + 1, u = t - 1; return 1 + c3 * u * u * u + c1 * u * u; }
+    return 1 - Math.pow(1 - t, 3);
+  }
+  _update() {
+    const clamp = this._clamp;
+    const vh = window.innerHeight, vw = window.innerWidth;
+    const now = performance.now();
+    this._scenes.forEach((s) => {
+      const r = s.getBoundingClientRect();
+      const last = s.hasAttribute('data-last');
+      const span = Math.max(1, r.height - (last ? 1 : 2) * vh);
+      const hs = Number(s.getAttribute('data-hs') || 0), he = Number(s.getAttribute('data-he') || 0);
+      // Hold zones at the start/end of each scene leave time to read before moving on.
+      const p = clamp((clamp(-r.top / span) - hs) / Math.max(0.01, 1 - hs - he));
+      const e = clamp((vh - r.top) / vh);
+      const x = last ? 0 : clamp((-r.top - span) / vh);
+      s._p = p; s._e = e;
+      s.style.setProperty('--p', p.toFixed(4));
+      s.style.setProperty('--e', e.toFixed(4));
+      s.style.setProperty('--x', x.toFixed(4));
+    });
+    this._coverflow(vw);
+    this._fx.forEach((f) => {
+      let base;
+      if (f.axis === 'x') {
+        // Every element of a case card follows the card's own position, so a card is
+        // fully revealed once it is well inside the screen (including the last one).
+        const trackLeft = this._track ? this._track.getBoundingClientRect().left : 0;
+        const left = f.card ? trackLeft + f.card.offsetLeft : f.el.getBoundingClientRect().left;
+        base = clamp((vw - left) / (vw * 0.55));
+      } else {
+        base = f.scene ? (f.src === 'e' ? f.scene._e : f.scene._p) : 1;
+      }
+      let t = clamp((base - f.a) / Math.max(0.0001, f.b - f.a));
+      if (!f.hasAt && f.intro !== null) t = 1; // intro-only element: stays in place once shown
+      if (f.rev) t = 1 - t;
+      if (f.intro !== null) {
+        const it = clamp((now - this._start - f.intro) / 1100);
+        t = Math.min(t, it);
+      }
+      t = this._ease(t, f.ease);
+      f.el.style.setProperty('--t', t.toFixed(4));
+    });
+  }
+  renderVals() {
+    const s = this.state || {};
+    const dark = (s.dark !== undefined && s.dark !== null) ? s.dark : (this.props.theme === 'dark');
+    const base = dark ? 'pf-root pf-dark' : 'pf-root pf-light';
+    return {
+      rootClass: s.cine ? base + ' cine' : base,
+      isDark: dark,
+      isLight: !dark,
+      toggleLabel: dark ? 'Passer en mode clair' : 'Passer en mode sombre',
+      toggle: () => this.setState({ dark: !dark })
+    };
+  }
+}
+document.addEventListener('click', function (ev) {
+  var t = ev.target.closest('[data-ref]'); if (!t) return;
+  var root = document.querySelector('.pf-root');
+  if (t.dataset.ref === 'theme') { root.classList.toggle('pf-dark'); root.classList.toggle('pf-light'); }
+  var m = document.querySelector('.ref-menu');
+  if (m && t.dataset.ref === 'menu') m.hidden = !m.hidden;
+  if (m && t.dataset.ref === 'close') m.hidden = true;
+});
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  document.querySelector('.pf-root').classList.add('cine');
+  setTimeout(function () { var c = new Component(); window.__ref = c; c.setupFilm(); }, 60);
+});
+</script>
+</body>
+</html>

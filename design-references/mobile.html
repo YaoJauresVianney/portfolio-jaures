@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Référence design — Mobile</title>
+<!-- RÉFÉRENCE DE DESIGN exportée depuis la maquette (canvas Claude Design).
+     Source de vérité pour : couleurs, typographie, textes, mise en page, chorégraphie des animations.
+     Le moteur d'animation ci-dessous est un prototype maison : à réimplémenter avec GSAP + ScrollTrigger. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif;background:#1A1511}
+h1,h2{text-wrap:balance}
+.pf-light{--terra-strong:#A2481F;--bg:#F6EFE4;--surface:#FFFAF2;--surface-2:#EFE3D0;--ink:#1F1A15;--muted:#5E5247;--line:#E2D3BD;--terra:#B4532A;--terra-ink:#FFF7EE;--ocre:#C98A1B;--ocre-ink:#85560A;--green:#1F4D3A;--green-text:#1F4D3A;--method-bg:#1F4D3A;--contact-bg:#8F3B1C;--on-dark:#F6EFE4;--on-dark-muted:#E4D6C3;--pat-op:.08;--nav-bg:rgba(246,239,228,.86)}
+.pf-dark{--terra-strong:#E07A4F;--bg:#15110D;--surface:#1F1914;--surface-2:#221B15;--ink:#F3EADD;--muted:#BCAD99;--line:#3A2F25;--terra:#E07A4F;--terra-ink:#15110D;--ocre:#E3A93A;--ocre-ink:#E3A93A;--green:#7FBF9A;--green-text:#8FCBA8;--method-bg:#122A20;--contact-bg:#6E2E16;--on-dark:#F3EADD;--on-dark-muted:#D8C8B4;--pat-op:.1;--nav-bg:rgba(21,17,13,.86)}
+.pf-light{--chip:#EFE3D0}
+.pf-dark{--chip:#352B22}
+.pf-dark .flap,.pf-dark .flap-h{background:#2B231C}
+.pf-dark .flap-h.bot{background:#30271F}
+.pf-root{transition:background-color .3s,color .3s}
+.pf-root a{color:var(--terra)}
+.pf-nav a{color:var(--ink);text-decoration:none}
+.pf-root a.pf-btn{text-decoration:none}
+.pf-root a.pf-btn-primary{color:var(--terra-ink)}
+.pf-root a.pf-btn-ghost{color:var(--ink)}
+.pf-root a.pf-btn-wa{color:#1F4D3A}
+.pf-root a.pf-mail{color:var(--on-dark)}
+.pf-root a.pf-menu-link{color:var(--ink);text-decoration:none}
+
+/* ---------- Mise en page statique (canvas) ---------- */
+.sc{position:relative}
+.stage{position:relative;overflow:hidden;padding:72px 20px}
+.stage-in{position:relative;z-index:1}
+.track{display:flex;flex-direction:column;gap:16px}
+.cases-bar{display:none}
+.scroll-hint{display:none}
+
+/* ---------- Mode « film » mobile ---------- */
+.cine .sc-hero{height:260vh;z-index:1}
+.cine .sc-cases{height:600vh;margin-top:-100vh;z-index:2}
+.cine .sc-services{height:440vh;margin-top:-100vh;z-index:3}
+.cine .sc-stack{height:320vh;margin-top:-100vh;z-index:4}
+.cine .sc-method{height:480vh;margin-top:-100vh;z-index:5}
+.cine .sc-contact{height:260vh;margin-top:-100vh;z-index:6}
+.cine .stage{position:sticky;top:0;height:100vh;box-sizing:border-box;padding:84px 20px 20px;display:flex;flex-direction:column;justify-content:center}
+.cine .stage.pan{justify-content:flex-start}
+.cine .stage-in{transform-origin:50% 50%}
+.cine .stage.pan .stage-in{transform-origin:50% 0}
+/* Scène plus haute que l'écran : réduite au plus à 92 %, puis la caméra descend (--ov × --pan) */
+.cine .sc-hero .stage-in,.cine .sc-stack .stage-in,.cine .sc-contact .stage-in,.cine .sc-method .stage-in{transform:translateY(calc(var(--ov,0px) * var(--pan,0) * -1)) scale(var(--fit,1))}
+.cine .pat{transform:translateY(calc(var(--p,0) * -60px))}
+.cine .scroll-hint{display:flex}
+.pf-light.cine{--backdrop:#2E241C}
+.pf-dark.cine{--backdrop:#070504}
+
+/* Hero : photo en relief (3 plans) qui pivote et recule, puis la caméra recule pendant que le cercle s'ouvre */
+.ph-scene{perspective:800px;perspective-origin:50% 45%}
+.ph-tilt{transform-style:preserve-3d}
+.cine .ph-tilt{will-change:transform;transform:translateZ(calc(var(--p,0) * -160px)) rotateY(calc(var(--p,0) * -22deg)) rotateX(calc(var(--p,0) * 5deg))}
+.cine .sc-hero .stage{transform-origin:50% 24%;transform:perspective(900px) translateZ(calc(var(--x,0) * (2 - var(--x,0)) * -560px)) rotateX(calc(var(--x,0) * (2 - var(--x,0)) * 8deg));border-radius:calc(var(--x,0) * 32px);box-shadow:0 30px 60px rgba(20,14,8,calc(var(--x,0) * .35));opacity:calc(1 - var(--x,0) * .35)}
+.cine .sc-hero{background:var(--surface-2)}
+
+/* Études de cas : ouverture en cercle depuis la photo, carrousel 3D horizontal, puis cube vers Services */
+.cine .sc-cases .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(1200px) translateZ(-50vh) rotateX(calc(var(--x,0) * 90deg)) translateZ(50vh);backface-visibility:hidden;clip-path:circle(calc(var(--e,1) * var(--e,1) * 120%) at 50% 26%);padding-left:0;padding-right:0;padding-top:92px;padding-bottom:16px}
+.cine .sc-cases .stage-in{perspective:1000px;perspective-origin:50% 50%}
+.cine .track{flex-direction:row;gap:16px;width:max-content;padding:0 24px;transform:translateX(calc(var(--p,0) * var(--shift,0px) * -1));transform-style:preserve-3d;pointer-events:none}
+.cine .track > *{pointer-events:auto;flex-shrink:0}
+.cine .case-intro,.cine .case{width:calc(100cqw - 48px);box-sizing:border-box}
+.cine .case-intro{justify-content:center;transform:scale(var(--cfit,1))}
+.cine .case{will-change:transform;transform:translateZ(var(--cz,0px)) rotateY(var(--cr,0deg)) scale(var(--cfit,1));opacity:var(--co,1);box-shadow:0 24px 50px rgba(31,26,21,calc(var(--hf,0) * .16))}
+.cine .cases-bar{display:block;position:absolute;left:24px;right:24px;top:76px;height:3px;background:var(--line);z-index:2}
+.cine .cases-bar > div{height:100%;background:var(--terra);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+
+/* Services : arrive comme la face suivante du cube ; jeu de cartes vertical ; la caméra descend pour la 3e carte */
+.cine .sc-services .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(1200px) translateZ(-50vh) rotateX(calc((var(--e,1) - 1) * 90deg)) translateZ(50vh);backface-visibility:hidden}
+.cine .sc-services .stage-in{transform:translateY(calc(var(--ov,0px) * var(--pan,0) * -1 - var(--x,0) * 10vh)) scale(var(--fit,1));opacity:calc(1 - var(--x,0) * .5)}
+.cube-shade{display:none}
+.cine .cube-shade{display:block;position:absolute;inset:0;pointer-events:none;z-index:6;background:#000}
+.cine .sc-cases .cube-shade{opacity:calc(var(--x,0) * .5)}
+.cine .sc-services .cube-shade{opacity:calc((1 - var(--e,1)) * .5)}
+.cine [data-fx="deal"]{--A:clamp(0, calc(var(--t,0) / .25), 1);--B:clamp(0, calc((var(--t,0) - .25) / .3), 1);--C:clamp(0, calc((var(--t,0) - .55) / .45), 1);position:relative;z-index:calc(2 + var(--k,0));opacity:var(--A);transform-origin:50% 50%;transform:perspective(1000px) translateY(calc(var(--k,0) * -1 * (100% + 14px) * (1 - var(--C)))) translateX(calc(var(--k,0) * 30px * var(--B) * (1 - var(--C)))) rotateX(calc((1 - var(--C)) * 22deg)) rotateZ(calc(var(--k,0) * (3deg + 7deg * var(--B)) * (1 - var(--C)))) scale(calc((.82 + .18 * var(--A)) * (.9 + .1 * var(--C))));box-shadow:0 calc(14px + 18px * (1 - var(--C))) 40px rgba(31,26,21,calc(.08 + .14 * (1 - var(--C))))}
+
+/* Stack : volet horizontal à l'entrée, puis l'écran se retourne vers Méthode */
+.cine .sc-stack .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(1300px) translateZ(calc(var(--x,0) * (1 - var(--x,0)) * -1200px)) rotateY(calc(var(--x,0) * 180deg));backface-visibility:hidden;clip-path:inset(0 calc((1 - var(--e,1)) * 100%) 0 0)}
+.cine .sc-method .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh)) perspective(1300px) translateZ(calc(var(--e,1) * (1 - var(--e,1)) * -1200px)) rotateY(calc(var(--e,1) * 180deg - 180deg));backface-visibility:hidden}
+.cine .sc-stack .cube-shade{opacity:calc(var(--x,0) * .7)}
+.cine .sc-method .cube-shade{opacity:calc((1 - var(--e,1)) * .7)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.flap{position:relative;height:52px;border-radius:8px;background:#1C1611;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 24px rgba(20,14,8,.18)}
+.flap::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#0B0806;z-index:20}
+.flap-h{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:#1C1611}
+.flap-h.top{top:0;border-radius:8px 8px 0 0;transform-origin:50% 100%}
+.flap-h.bot{bottom:0;border-radius:0 0 8px 8px;transform-origin:50% 0}
+.flap-h > span{position:absolute;left:0;right:0;height:52px;display:flex;align-items:center;padding:0 12px;font-family:'Fraunces',Georgia,serif;font-size:21px;font-weight:600;color:#F3EADD;letter-spacing:.01em;white-space:nowrap}
+.flap-h.top > span{top:0}
+.flap-h.bot > span{top:-26px}
+.flap-h.bot{background:#211A14}
+.flap-h.f0,.flap-h.f1,.flap-h.f2{display:none}
+.f0{--j:0}.f1{--j:1}.f2{--j:2}.f3{--j:3}
+.cine .flap-h.f0,.cine .flap-h.f1,.cine .flap-h.f2{display:block}
+.cine .flap-h.top{z-index:calc(10 - var(--j));transform:perspective(300px) rotateX(calc(-90deg * clamp(0, calc(6 * var(--t,0) - 2 * var(--j)), 1)))}
+.cine .flap-h.bot{z-index:calc(1 + var(--j));transform:perspective(300px) rotateX(calc(90deg * (1 - clamp(0, calc(6 * var(--t,0) - 2 * var(--j) + 1), 1))))}
+
+/* Méthode : frise verticale posée sur un plan incliné qui se redresse ; la ligne dorée descend et chaque étape se redresse (domino) ; la caméra suit la ligne */
+.cine .sc-method .stage-in{opacity:calc(1 - var(--x,0) * .7)}
+.cine .road{transform-origin:50% 0;transform:perspective(900px) rotateX(calc((1 - clamp(0, calc((var(--p,0) - .02) / .3), 1)) * 50deg))}
+.cine [data-fx="drawY"]{transform:scaleY(var(--t,0));transform-origin:50% 0}
+.cine [data-fx="domino"]{transform-origin:50% 100%;transform:perspective(700px) rotateX(calc((1 - var(--t,0)) * 86deg));opacity:clamp(0, calc(var(--t,0) * 2.5), 1)}
+
+/* Contact : balayage en diagonale */
+.cine .sc-contact .stage{transform:translateY(calc((var(--e,1) - 1) * 100vh));clip-path:polygon(0 0,calc(var(--e,1) * 200%) 0,calc(var(--e,1) * 200% - 100%) 100%,0 100%)}
+
+/* Apparitions (valeurs réduites pour un écran de téléphone) */
+.cine [data-fx="rise"]{opacity:var(--t,0);transform:translateY(calc((1 - var(--t,0)) * 50px))}
+.cine [data-fx="drop"]{opacity:var(--t,0);transform:translateY(calc((1 - var(--t,0)) * -40px))}
+.cine [data-fx="left"]{opacity:var(--t,0);transform:translateX(calc((1 - var(--t,0)) * -140px))}
+.cine [data-fx="right"]{opacity:var(--t,0);transform:translateX(calc((1 - var(--t,0)) * 60px))}
+.cine [data-fx="mask"]{clip-path:inset(calc((1 - var(--t,0)) * 100%) 0 0 0);transform:translateY(calc((1 - var(--t,0)) * 50px))}
+.cine [data-fx="wipe"]{clip-path:inset(0 calc((1 - var(--t,0)) * 100%) 0 0)}
+.cine [data-fx="curtain"]{clip-path:inset(0 0 0 calc((1 - var(--t,0)) * 100%))}
+.cine [data-fx="blur"]{opacity:var(--t,0);filter:blur(calc((1 - var(--t,0)) * 14px));transform:scale(calc(1.04 - var(--t,0) * .04))}
+.cine [data-fx="zoom"]{opacity:var(--t,0);transform:scale(calc(.55 + var(--t,0) * .45))}
+.cine [data-fx="pop"]{opacity:clamp(0,calc(var(--t,0) * 3),1);transform:scale(var(--t,0))}
+.cine [data-fx="flip"]{opacity:var(--t,0);transform:perspective(1000px) rotateY(calc((1 - var(--t,0)) * 80deg));transform-origin:0 50%}
+.cine [data-fx="swing"]{opacity:var(--t,0);transform:perspective(1000px) rotateX(calc((1 - var(--t,0)) * -80deg));transform-origin:50% 0}
+.cine [data-fx="spin"]{opacity:var(--t,0);transform:rotate(calc((1 - var(--t,0)) * -16deg)) scale(calc(.7 + var(--t,0) * .3))}
+.cine [data-fx="tilt"]{opacity:var(--t,0);transform:skewY(calc((1 - var(--t,0)) * 9deg)) translateY(calc((1 - var(--t,0)) * 60px))}
+.cine [data-fx="iris"]{clip-path:circle(calc(var(--t,0) * 75%) at 50% 50%)}
+.cine [data-fx="draw"]{transform:scaleX(var(--t,0));transform-origin:0 50%}
+.cine [data-fx="fade"]{opacity:var(--t,0)}
+
+.ic-dark,.ic-light{display:contents}
+.pf-light .ic-dark,.pf-dark .ic-light{display:none}
+</style>
+</head>
+<body>
+<div class="pf-root pf-dark" style="width: 100%; max-width: 440px; margin: 0 auto; container-type: inline-size; display: flex; flex-direction: column; background: var(--backdrop, var(--bg)); color: var(--ink); position: relative; overflow-x: clip">
+<svg width="0" height="0" aria-hidden="true" style="position: absolute">
+<defs>
+<pattern id="pm-kita" width="72" height="72" patternUnits="userSpaceOnUse">
+<rect x="0" y="4" width="33" height="5" fill="currentColor"></rect>
+<rect x="0" y="15" width="33" height="5" style="fill: var(--ocre)"></rect>
+<rect x="0" y="26" width="33" height="5" fill="currentColor"></rect>
+<polygon points="39,32 54,6 69,32" style="fill: var(--green)"></polygon>
+<rect x="4" y="39" width="5" height="30" style="fill: var(--ocre)"></rect>
+<rect x="15" y="39" width="5" height="30" fill="currentColor"></rect>
+<rect x="26" y="39" width="5" height="30" style="fill: var(--ocre)"></rect>
+<rect x="39" y="39" width="14" height="14" fill="currentColor"></rect>
+<rect x="56" y="56" width="14" height="14" style="fill: var(--green)"></rect>
+</pattern>
+<pattern id="pm-losange" width="36" height="36" patternUnits="userSpaceOnUse">
+<polygon points="18,3 33,18 18,33 3,18" fill="none" stroke="currentColor" stroke-width="1.5"></polygon>
+<polygon points="18,13 23,18 18,23 13,18" fill="currentColor"></polygon>
+</pattern>
+<pattern id="pm-zigzag" width="24" height="16" patternUnits="userSpaceOnUse">
+<polyline points="0,13 6,3 12,13 18,3 24,13" fill="none" stroke="currentColor" stroke-width="2"></polyline>
+</pattern>
+</defs>
+</svg>
+<header class="pf-nav" style="height: 64px; margin-bottom: -64px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50; background: var(--nav-bg); backdrop-filter: blur(10px)">
+<a href="#top" data-ref="close" style="display: flex; align-items: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect x="0" y="0" width="14" height="14" rx="2" style="fill: var(--terra)"></rect><rect x="18" y="0" width="14" height="14" rx="2" style="fill: var(--ocre)"></rect><rect x="0" y="18" width="14" height="14" rx="2" style="fill: var(--green)"></rect><rect x="18" y="18" width="14" height="14" rx="2" style="fill: var(--terra)"></rect></svg>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 700">Jaurès</span>
+</a>
+<div style="display: flex; align-items: center; gap: 8px">
+<button type="button" data-ref="theme" aria-label="Changer de thème" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<span class="ic-dark">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+</span>
+<span class="ic-light">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</span>
+</button>
+<button type="button" data-ref="menu" aria-label="Menu" aria-expanded="" style="width: 44px; height: 44px; border-radius: 999px; border: none; background: var(--ink); color: var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
+</button>
+</div>
+<div class="ref-menu" hidden>
+<nav aria-label="Navigation principale" style="position: absolute; top: 64px; left: 0; right: 0; padding: 12px 20px 24px; background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 20px 40px rgba(20,14,8,0.18); display: flex; flex-direction: column">
+<a class="pf-menu-link" href="#cas" data-ref="close" style="padding: 12px 0; border-bottom: 1px solid var(--line); font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600">Études de cas</a>
+<a class="pf-menu-link" href="#services" data-ref="close" style="padding: 12px 0; border-bottom: 1px solid var(--line); font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600">Services</a>
+<a class="pf-menu-link" href="#stack" data-ref="close" style="padding: 12px 0; border-bottom: 1px solid var(--line); font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600">Stack</a>
+<a class="pf-menu-link" href="#methode" data-ref="close" style="padding: 12px 0; border-bottom: 1px solid var(--line); font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600">Méthode</a>
+<a class="pf-menu-link" href="#contact" data-ref="close" style="padding: 12px 0; font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600">Contact</a>
+<a class="pf-btn pf-btn-primary" href="https://wa.me/225XXXXXXXXXX" style="margin-top: 16px; height: 52px; border-radius: 999px; background: var(--terra); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; font-weight: 700"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path></svg>Parlons projet</a>
+</nav>
+</div>
+</header>
+<div id="top" class="sc sc-hero" data-scene="hero" data-hs="0" data-he="0" data-pan="0.05 0.85">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--terra); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pm-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 16px">
+<div class="ph-scene" style="width: min(250px, 66cqw); height: min(210px, 25vh); align-self: center; flex-shrink: 0; position: relative; margin-bottom: 6px">
+<div class="ph-tilt" style="position: absolute; inset: 0">
+<div class="ph-layer" style="position: absolute; inset: 0; transform: translateZ(-30px)">
+<div data-fx="iris" data-intro="250" style="position: absolute; inset: 0; border-radius: 125px 125px 20px 20px; overflow: hidden; background: var(--surface-2); box-shadow: 0 20px 40px rgba(31,26,21,0.16)">
+<svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; color: var(--terra); opacity: 0.55"><rect width="100%" height="100%" fill="url(#pm-kita)"></rect></svg>
+</div>
+</div>
+<div class="ph-layer" style="position: absolute; left: 20px; right: 20px; top: 20px; bottom: 20px; transform: translateZ(20px)">
+<div data-fx="mask" data-intro="550" style="position: absolute; inset: 0; border-radius: 105px 105px 14px 14px; background: var(--surface); border: 2px dashed var(--line); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--muted)">[Votre photo]</div>
+</div>
+<div class="ph-layer" style="position: absolute; left: -34px; bottom: -14px; width: 168px; transform: translateZ(44px)">
+<div data-fx="right" data-intro="1000" style="padding: 10px 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 18px 36px rgba(31,26,21,0.2); display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Double casquette</div>
+<div style="font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 600; line-height: 1.25">Le code et le pilotage, sans intermédiaire.</div>
+</div>
+</div>
+</div>
+</div>
+<div data-fx="left" data-intro="0" style="display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">
+<span style="width: 22px; height: 3px; background: var(--ocre); border-radius: 2px; flex-shrink: 0"></span>
+Fullstack &amp; chef de projet IT · Abidjan
+</div>
+<h1 data-fx="blur" data-intro="150" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 9.4cqw, 40px); line-height: 1.06; font-weight: 600; letter-spacing: -0.02em">Votre projet web, cadré, construit et livré par <span style="color: var(--terra); font-style: italic">un seul interlocuteur.</span></h1>
+<p data-fx="drop" data-intro="400" style="margin: 0; font-size: 16px; line-height: 1.55; color: var(--muted)">Je suis Jaurès. J'accompagne entreprises, institutions et startups de l'idée à la mise en ligne : plateformes d'inscription, outils RH, applications métier — ici en Côte d'Ivoire comme pour la diaspora.</p>
+<div data-fx="zoom" data-intro="600" style="display: flex; flex-direction: column; gap: 10px; padding-top: 4px">
+<a class="pf-btn pf-btn-primary" href="https://wa.me/225XXXXXXXXXX" style="height: 52px; border-radius: 999px; background: var(--terra); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; font-weight: 700"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path></svg>Discuter de votre projet</a>
+<a class="pf-btn pf-btn-ghost" href="#cas" style="height: 48px; border-radius: 999px; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Voir les études de cas</a>
+</div>
+<div data-fx="wipe" data-intro="800" style="display: flex; flex-wrap: wrap; column-gap: 18px; row-gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted)">
+<span style="display: flex; align-items: center; gap: 7px"><span style="width: 7px; height: 7px; background: var(--terra); transform: rotate(45deg)"></span>Laravel · React · TypeScript</span>
+<span style="display: flex; align-items: center; gap: 7px"><span style="width: 7px; height: 7px; background: var(--ocre); transform: rotate(45deg)"></span>Basé à Abidjan</span>
+<span style="display: flex; align-items: center; gap: 7px"><span style="width: 7px; height: 7px; background: var(--green); transform: rotate(45deg)"></span>Missions à distance ou sur site</span>
+</div>
+</div>
+</section>
+</div>
+<div id="cas" class="sc sc-cases" data-scene="cases" data-hs="0.04" data-he="0.12">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--green); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pm-kita)"></rect></svg>
+<div class="stage-in">
+<div class="track" data-track="">
+<div class="case-intro" style="display: flex; flex-direction: column; gap: 14px">
+<div data-fx="left" data-src="e" data-at="0.5 0.85" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Études de cas</div>
+<h2 data-fx="mask" data-src="e" data-at="0.6 1" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Des problèmes concrets, des solutions sur mesure.</h2>
+<p data-fx="fade" data-src="e" data-at="0.75 1" style="margin: 0; font-size: 16px; line-height: 1.55; color: var(--muted)">Quatre projets, quatre contextes : l'événementiel, le recrutement, l'emploi dans la diaspora et l'automatisation par l'IA.</p>
+<div data-fx="curtain" data-src="e" data-at="0.85 1" style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; color: var(--terra-strong)">Continuez à défiler <svg width="36" height="14" viewBox="0 0 40 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 7h36M31 1l6 6-6 6"></path></svg></div>
+</div>
+<article class="case" style="padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 11px">
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span data-fx="pop" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 400; color: var(--muted); line-height: 1">01</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h3 data-fx="mask" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em">FODESE</h3>
+<div data-fx="wipe" data-axis="x" data-at="0.45 0.75" style="font-size: 13px; font-weight: 600; color: var(--muted)">Plateforme événementielle multi-villes</div>
+</div>
+</div>
+<div data-fx="curtain" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; gap: 6px"><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">PHP</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">MySQL</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">QR codes</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Mailgun</span></div>
+<div data-fx="left" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Un forum organisé dans plusieurs villes devait gérer inscriptions, badges, accueil et suivi des participants sans perdre le fil d'une ville à l'autre.</p></div>
+<div data-fx="rise" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Une plateforme multi-modules : inscriptions en ligne, badges QR automatiques, e-mails transactionnels, relance des absents, suivi des visites de stands et tableaux de bord statistiques.</p></div>
+<div data-fx="right" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div><p style="margin: 0; font-size: 15px; line-height: 1.5">L'édition 2026 opérée à Yamoussoukro, Bouaké et San-Pédro sur une seule plateforme, avec un formulaire express pour le personnel le jour J.</p></div>
+<div data-fx="zoom" data-axis="x" data-at="0.8 1" style="align-self: flex-start; padding: 6px 12px; border-radius: 10px; background: var(--chip); font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 600">3 villes · [N] inscrits</div>
+</article>
+<article class="case" style="padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 11px">
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span data-fx="spin" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 400; color: var(--muted); line-height: 1">02</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h3 data-fx="blur" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em">Empower CV</h3>
+<div data-fx="fade" data-axis="x" data-at="0.45 0.75" style="font-size: 13px; font-weight: 600; color: var(--muted)">Parsing &amp; matching sémantique de CV</div>
+</div>
+</div>
+<div data-fx="wipe" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; gap: 6px"><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Laravel API</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">React</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">pgvector</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Embeddings</span></div>
+<div data-fx="swing" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Comparer des dizaines de CV à chaque offre, à la main, prend du temps et reste subjectif — les bons profils passent entre les mailles.</p></div>
+<div data-fx="zoom" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Un service qui extrait les CV puis les compare aux offres par similarité sémantique (embeddings OpenAI, pgvector sur Supabase), exposé par une API REST Laravel et une interface React.</p></div>
+<div data-fx="flip" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Pour chaque offre, un classement des candidats par pertinence, consultable depuis une interface simple par l'équipe RH.</p></div>
+<div data-fx="pop" data-axis="x" data-at="0.8 1" style="align-self: flex-start; padding: 6px 12px; border-radius: 10px; background: var(--chip); font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 600">[X] % de temps de tri gagné</div>
+</article>
+<article class="case" style="padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 11px">
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span data-fx="drop" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 400; color: var(--muted); line-height: 1">03</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h3 data-fx="wipe" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em">DiaspoJob</h3>
+<div data-fx="rise" data-axis="x" data-at="0.45 0.75" style="font-size: 13px; font-weight: 600; color: var(--muted)">Plateforme d'emploi pour la diaspora africaine</div>
+</div>
+</div>
+<div data-fx="zoom" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; gap: 6px"><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Laravel</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Inertia</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">React</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">React Native</span></div>
+<div data-fx="tilt" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Les talents de la diaspora et les recruteurs du continent se croisent mal sur des job boards généralistes, pensés pour d'autres marchés.</p></div>
+<div data-fx="mask" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Une plateforme dédiée en Laravel, Inertia et React : design responsive, partage social, rotation d'annonces sponsorisées et SEO soigné, optimisée pour un hébergement mutualisé.</p></div>
+<div data-fx="blur" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Une plateforme web responsive, prolongée par une application mobile React Native préparée pour le Google Play Store.</p></div>
+<div data-fx="curtain" data-axis="x" data-at="0.8 1" style="align-self: flex-start; padding: 6px 12px; border-radius: 10px; background: var(--chip); font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 600">Web + mobile Android</div>
+</article>
+<article class="case" style="padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 11px">
+<div style="display: flex; align-items: baseline; gap: 12px">
+<span data-fx="zoom" data-axis="x" data-at="0.3 0.6" style="display: inline-block; font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 400; color: var(--muted); line-height: 1">04</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h3 data-fx="swing" data-axis="x" data-at="0.35 0.65" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em">CV-Offre Matcher</h3>
+<div data-fx="curtain" data-axis="x" data-at="0.45 0.75" style="font-size: 13px; font-weight: 600; color: var(--muted)">Génération de prospects par l'IA</div>
+</div>
+</div>
+<div data-fx="rise" data-axis="x" data-at="0.5 0.8" style="display: flex; flex-wrap: wrap; gap: 6px"><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Python</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">OCR</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">LLM</span><span style="padding: 4px 10px; border-radius: 999px; background: var(--chip); font-size: 12px; font-weight: 600">Excel</span></div>
+<div data-fx="drop" data-axis="x" data-at="0.55 0.8" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra)">Problème</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Un cabinet de recrutement et de formation disposait d'environ 8 000 CV en PDF, sans moyen rapide d'y repérer des prospects pour ses programmes.</p></div>
+<div data-fx="curtain" data-axis="x" data-at="0.62 0.88" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Solution</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Un pipeline par lots : extraction de texte et OCR, pré-filtrage par mots-clés, classification par LLM (Claude Haiku) puis scoring de chaque profil.</p></div>
+<div data-fx="spin" data-axis="x" data-at="0.7 0.95" style="display: flex; flex-direction: column; gap: 4px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green-text)">Résultat</div><p style="margin: 0; font-size: 15px; line-height: 1.5">Des listes de prospects notées, livrées en Excel, directement exploitables par l'équipe commerciale.</p></div>
+<div data-fx="iris" data-axis="x" data-at="0.8 1" style="align-self: flex-start; padding: 6px 12px; border-radius: 10px; background: var(--chip); font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 600">≈ 8 000 CV analysés</div>
+</article>
+</div>
+</div>
+<div class="cases-bar" aria-hidden="true"><div></div></div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+<div id="services" class="sc sc-services" data-scene="services" data-hs="0" data-he="0.15" data-pan="0.5 0.9">
+<section class="stage" style="background: var(--surface-2)">
+<svg aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 16px; color: var(--ocre); opacity: 0.7; z-index: 2"><rect width="100%" height="16" fill="url(#pm-zigzag)"></rect></svg>
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--terra); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pm-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div data-fx="drop" data-src="e" data-at="0.45 0.8" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Services</div>
+<h2 data-fx="blur" data-src="e" data-at="0.55 0.95" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Trois façons de faire avancer votre projet.</h2>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div data-fx="deal" data-at="0 0.5" style="--k: -1; padding: 20px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div data-fx="pop" data-ease="back" data-at="0.52 0.62" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--terra); color: var(--terra-ink); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"></path></svg></div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Développement web sur mesure</h3>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink)">Applications métier, plateformes d'inscription, espaces membres et back-offices. Du code maintenable, un déploiement maîtrisé — y compris sur hébergement mutualisé.</p>
+<ul style="margin: 0; padding: 10px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: var(--muted)"><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Applications Laravel · Inertia · React</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Back-offices &amp; tableaux de bord</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Mise en ligne &amp; maintenance</li></ul>
+</div>
+<div data-fx="deal" data-at="0.03 0.53" style="--k: 0; padding: 20px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div data-fx="spin" data-at="0.58 0.68" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--ocre); color: #1F1A15; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1M9 11h6M9 15h4"></path></svg></div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Pilotage de projet IT</h3>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink)">Je traduis vos besoins en cahier des charges clair, je modélise vos données et vos processus, puis je coordonne jusqu'à la livraison.</p>
+<ul style="margin: 0; padding: 10px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: var(--muted)"><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Cadrage &amp; cahier des charges</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Modélisation MERISE (MCD, MCT, MOT)</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Suivi, recette &amp; formation</li></ul>
+</div>
+<div data-fx="deal" data-at="0.06 0.56" style="--k: 1; padding: 20px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div data-fx="zoom" data-at="0.64 0.74" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--green); color: var(--bg); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"></circle><circle cx="18" cy="6" r="2.5"></circle><circle cx="12" cy="18" r="2.5"></circle><path d="M8 7.5l2.8 8M16 7.5l-2.8 8M8.5 6h7"></path></svg></div>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">IA &amp; automatisation des données</h3>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink)">Extraction de documents, matching sémantique, classification par LLM : j'intègre l'IA là où elle vous fait réellement gagner du temps.</p>
+<ul style="margin: 0; padding: 10px 0 0; list-style: none; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: var(--muted)"><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Traitement de CV &amp; PDF en masse</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Matching par embeddings</li><li style="display: flex; align-items: center; gap: 9px"><span style="width: 6px; height: 6px; flex-shrink: 0; background: var(--ocre); transform: rotate(45deg)"></span>Pipelines &amp; exports Excel</li></ul>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+<div id="stack" class="sc sc-stack" data-scene="stack" data-hs="0" data-he="0.25" data-pan="0.3 0.8">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--ocre); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pm-zigzag)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div data-fx="wipe" data-at="0 0.15" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre-ink)">Stack technique</div>
+<h2 data-fx="mask" data-at="0.05 0.3" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Des outils modernes, maîtrisés.</h2>
+<p data-fx="fade" data-at="0.2 0.4" style="margin: 0; font-size: 16px; line-height: 1.55; color: var(--muted)">Un socle cohérent du back-end à l'interface, pour des applications rapides à faire évoluer.</p>
+</div>
+<div>
+<div data-fx="draw" data-at="0.25 0.5" style="height: 2px; background: var(--ink); margin-bottom: 14px"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; row-gap: 10px">
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">Laravel</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.3 0.5" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>X7#Q·R2</span></div><div class="flap-h bot f1"><span>X7#Q·R2</span></div><div class="flap-h top f2"><span>LA4AV3L</span></div><div class="flap-h bot f2"><span>LA4AV3L</span></div><div class="flap-h top f3"><span>Laravel</span></div><div class="flap-h bot f3"><span>Laravel</span></div></div><div data-fx="fade" data-at="0.50 0.60" style="font-size: 13px; color: var(--muted)">Back-end &amp; API</div></div>
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">React</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.36 0.56" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Q#9·Z</span></div><div class="flap-h bot f1"><span>Q#9·Z</span></div><div class="flap-h top f2"><span>RE4CT</span></div><div class="flap-h bot f2"><span>RE4CT</span></div><div class="flap-h top f3"><span>React</span></div><div class="flap-h bot f3"><span>React</span></div></div><div data-fx="fade" data-at="0.56 0.66" style="font-size: 13px; color: var(--muted)">Interfaces</div></div>
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">TypeScript</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.42 0.62" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>#K2·X9QW7Z</span></div><div class="flap-h bot f1"><span>#K2·X9QW7Z</span></div><div class="flap-h top f2"><span>TYP3SCR1PT</span></div><div class="flap-h bot f2"><span>TYP3SCR1PT</span></div><div class="flap-h top f3"><span>TypeScript</span></div><div class="flap-h bot f3"><span>TypeScript</span></div></div><div data-fx="fade" data-at="0.62 0.72" style="font-size: 13px; color: var(--muted)">Code typé et fiable</div></div>
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">Inertia</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.48 0.68" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Z9#·QK2</span></div><div class="flap-h bot f1"><span>Z9#·QK2</span></div><div class="flap-h top f2"><span>1NERT1A</span></div><div class="flap-h bot f2"><span>1NERT1A</span></div><div class="flap-h top f3"><span>Inertia</span></div><div class="flap-h bot f3"><span>Inertia</span></div></div><div data-fx="fade" data-at="0.68 0.78" style="font-size: 13px; color: var(--muted)">Le pont Laravel ↔ React</div></div>
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">MySQL</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.54 0.74" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>#Q7·K</span></div><div class="flap-h bot f1"><span>#Q7·K</span></div><div class="flap-h top f2"><span>MY5QL</span></div><div class="flap-h bot f2"><span>MY5QL</span></div><div class="flap-h top f3"><span>MySQL</span></div><div class="flap-h bot f3"><span>MySQL</span></div></div><div data-fx="fade" data-at="0.74 0.84" style="font-size: 13px; color: var(--muted)">Données structurées</div></div>
+<div style="overflow: hidden; padding: 4px 2px 8px; display: flex; flex-direction: column; gap: 8px"><span class="sr-only">Tailwind</span><div class="flap" data-fx="flap" data-ease="linear" data-at="0.6 0.8" aria-hidden="true"><div class="flap-h top f0"><span></span></div><div class="flap-h bot f0"><span></span></div><div class="flap-h top f1"><span>Q#7·ZK9X</span></div><div class="flap-h bot f1"><span>Q#7·ZK9X</span></div><div class="flap-h top f2"><span>TA1LW1ND</span></div><div class="flap-h bot f2"><span>TA1LW1ND</span></div><div class="flap-h top f3"><span>Tailwind</span></div><div class="flap-h bot f3"><span>Tailwind</span></div></div><div data-fx="fade" data-at="0.80 0.90" style="font-size: 13px; color: var(--muted)">UI cohérente</div></div>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+<div id="methode" class="sc sc-method" data-scene="method" data-hs="0" data-he="0.15" data-pan="0.3 0.95">
+<section class="stage" style="background: var(--method-bg); color: var(--on-dark)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: #F6EFE4; opacity: 0.07"><rect width="100%" height="100%" fill="url(#pm-kita)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div data-fx="fade" data-src="e" data-at="0.6 0.85" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #E3A93A">Méthode de travail</div>
+<h2 data-fx="swing" data-src="e" data-at="0.65 1" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Cinq étapes, zéro surprise.</h2>
+</div>
+<div class="road" style="display: flex; flex-direction: column; gap: 22px">
+<div style="position: relative">
+<div aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: rgba(246,239,228,0.18)"></div><div data-fx="drawY" data-ease="linear" data-at="0.20 0.32" aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: #E3A93A"></div>
+<div data-fx="domino" data-ease="back" data-at="0.12 0.20" style="display: flex; gap: 16px; position: relative">
+<div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #E07A4F; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600">01</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 9px">
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Écoute</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--on-dark-muted)">Un premier échange pour comprendre vos objectifs, vos utilisateurs et vos contraintes.</p>
+</div>
+</div>
+</div>
+<div style="position: relative">
+<div aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: rgba(246,239,228,0.18)"></div><div data-fx="drawY" data-ease="linear" data-at="0.40 0.52" aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: #E3A93A"></div>
+<div data-fx="domino" data-ease="back" data-at="0.32 0.40" style="display: flex; gap: 16px; position: relative">
+<div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #E3A93A; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600">02</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 9px">
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Cadrage</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--on-dark-muted)">Périmètre, modélisation des données, planning et devis détaillé, validés ensemble.</p>
+</div>
+</div>
+</div>
+<div style="position: relative">
+<div aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: rgba(246,239,228,0.18)"></div><div data-fx="drawY" data-ease="linear" data-at="0.60 0.72" aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: #E3A93A"></div>
+<div data-fx="domino" data-ease="back" data-at="0.52 0.60" style="display: flex; gap: 16px; position: relative">
+<div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #F6EFE4; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600">03</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 9px">
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Maquettes</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--on-dark-muted)">Parcours et écrans validés avec vous avant la moindre ligne de code.</p>
+</div>
+</div>
+</div>
+<div style="position: relative">
+<div aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: rgba(246,239,228,0.18)"></div><div data-fx="drawY" data-ease="linear" data-at="0.80 0.90" aria-hidden="true" style="position: absolute; left: 21px; top: 44px; bottom: -22px; width: 2px; background: #E3A93A"></div>
+<div data-fx="domino" data-ease="back" data-at="0.72 0.80" style="display: flex; gap: 16px; position: relative">
+<div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #E3A93A; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600">04</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 9px">
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Développement</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--on-dark-muted)">Des livraisons régulières que vous testez au fil de l'eau, avec un point d'avancement clair.</p>
+</div>
+</div>
+</div>
+<div style="position: relative">
+
+<div data-fx="domino" data-ease="back" data-at="0.90 0.98" style="display: flex; gap: 16px; position: relative">
+<div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; background: #E07A4F; color: #15110D; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600">05</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 9px">
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.2">Mise en ligne &amp; suivi</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--on-dark-muted)">Déploiement, formation de vos équipes, puis maintenance et évolutions.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cube-shade" aria-hidden="true"></div>
+</section>
+</div>
+<div id="contact" class="sc sc-contact" data-scene="contact" data-last="" data-hs="0" data-he="0.15" data-pan="0.3 0.85">
+<section class="stage" style="background: var(--bg)">
+<svg class="pat" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 120%; color: var(--green); opacity: var(--pat-op)"><rect width="100%" height="100%" fill="url(#pm-losange)"></rect></svg>
+<div class="stage-in" style="display: flex; flex-direction: column; gap: 24px">
+<div data-fx="zoom" data-at="0 0.25" style="position: relative; border-radius: 24px; overflow: hidden; background: var(--contact-bg); color: var(--on-dark); padding: 26px 22px; display: flex; flex-direction: column; gap: 16px">
+<svg data-fx="curtain" data-at="0.1 0.5" aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 100%; height: 90px; color: #F6EFE4; opacity: 0.16"><rect width="100%" height="100%" fill="url(#pm-kita)"></rect></svg>
+<div data-fx="drop" data-at="0.15 0.3" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F; position: relative; padding-top: 66px">Contact</div>
+<h2 data-fx="blur" data-at="0.2 0.45" style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 32px; line-height: 1.08; font-weight: 600; letter-spacing: -0.02em; position: relative">Parlons de votre projet.</h2>
+<p data-fx="rise" data-at="0.35 0.52" style="margin: 0; font-size: 16px; line-height: 1.55; color: var(--on-dark-muted); position: relative">Une idée, un cahier des charges ou simplement une question ? Écrivez-moi sur WhatsApp : on en discute, sans engagement.</p>
+<div data-fx="pop" data-ease="back" data-at="0.48 0.62" style="position: relative">
+<a class="pf-btn pf-btn-wa" href="https://wa.me/225XXXXXXXXXX" style="height: 54px; border-radius: 999px; background: #F6EFE4; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; font-weight: 700"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5z"></path></svg>Écrire sur WhatsApp</a>
+</div>
+<a class="pf-mail" data-fx="wipe" data-at="0.56 0.7" href="mailto:yaojauresvianney@gmail.com" style="align-self: center; font-size: 15px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; position: relative; overflow-wrap: anywhere">yaojauresvianney@gmail.com</a>
+<div data-fx="flip" data-at="0.6 0.78" style="padding: 16px 18px; border-radius: 16px; background: rgba(21,17,13,0.28); display: flex; flex-direction: column; gap: 12px; position: relative">
+<div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Localisation</div><div style="font-size: 15px; font-weight: 600">Abidjan, Côte d'Ivoire</div></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Fuseau</div><div style="font-size: 15px; font-weight: 600">GMT (UTC+0)</div></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #F7D58F">Disponibilité</div><div style="font-size: 15px; font-weight: 600">[Votre disponibilité]</div></div>
+</div>
+</div>
+<footer data-fx="rise" data-at="0.75 0.92" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); text-align: center; text-wrap: balance">
+<span>© 2026 Jaurès — Développeur fullstack &amp; chef de projet IT</span>
+<span style="display: flex; align-items: center; gap: 8px"><svg width="36" height="12" aria-hidden="true" style="color: var(--ocre)"><rect width="36" height="12" fill="url(#pm-zigzag)"></rect></svg>Conçu et codé à Abidjan</span>
+</footer>
+</div>
+</section>
+</div>
+</div>
+
+<script>
+class DCLogic { constructor(){this.props={};this.state={};} setState(o){Object.assign(this.state,o);} }
+class Component extends DCLogic {
+  componentDidMount() {
+    if (this.props.cine === false) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // The film mode needs a real, scrolling viewport (full-page view on a phone).
+    // On the canvas the artboard is laid out statically, fully visible.
+    const doc = document.documentElement;
+    if (window.innerHeight > 1600 || doc.scrollHeight <= window.innerHeight * 1.2) return;
+    this.setState({ cine: true });
+    this._boot = setTimeout(() => this.setupFilm(), 60);
+  }
+  componentWillUnmount() {
+    clearTimeout(this._boot);
+    if (this._onScroll) {
+      document.removeEventListener('scroll', this._onScroll, true);
+      window.removeEventListener('resize', this._onResize);
+    }
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+  setupFilm() {
+    const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    this._clamp = clamp;
+    this._root = document.querySelector('.pf-root');
+    this._scenes = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+    this._fx = Array.prototype.slice.call(document.querySelectorAll('[data-fx]')).map((el) => {
+      const at = (el.getAttribute('data-at') || '0 1').split(' ').map(Number);
+      return {
+        el: el,
+        scene: el.closest('[data-scene]'),
+        a: at[0], b: at[1],
+        rev: el.hasAttribute('data-rev'),
+        hasAt: el.hasAttribute('data-at'),
+        intro: el.hasAttribute('data-intro') ? Number(el.getAttribute('data-intro')) : null,
+        ease: el.getAttribute('data-ease') || 'out',
+        axis: el.getAttribute('data-axis'),
+        card: el.closest('.case'),
+        src: el.getAttribute('data-src') || 'p'
+      };
+    });
+    this._track = document.querySelector('[data-track]');
+    this._cards = Array.prototype.slice.call(document.querySelectorAll('#cas .case'));
+    this._start = performance.now();
+    this._measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this._measure(); this._request(); });
+    this._onScroll = () => this._request();
+    this._onResize = () => { this._measure(); this._request(); };
+    document.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._tick();
+  }
+  _frame() {
+    // The page is a phone-width column (centred when previewed on a wide screen).
+    const r = this._root ? this._root.getBoundingClientRect() : { left: 0, width: window.innerWidth };
+    return { left: r.left, width: r.width };
+  }
+  _measure() {
+    const vh = window.innerHeight;
+    const avail = vh - 104 - 8;
+    (this._scenes || []).forEach((s) => {
+      const si = s.querySelector('.stage-in');
+      if (!si) return;
+      const id = s.getAttribute('data-scene');
+      if (id === 'cases') return;
+      // A scene taller than the screen is shrunk at most to 92 %; whatever still overflows,
+      // the camera pans down through it while scrolling (data-pan window).
+      const hgt = Math.max(1, si.offsetHeight);
+      const fit = Math.max(0.92, Math.min(1, avail / hgt));
+      const ov = Math.max(0, hgt * fit - avail);
+      si.style.setProperty('--fit', fit.toFixed(4));
+      si.style.setProperty('--ov', ov.toFixed(0) + 'px');
+      const st = s.querySelector('.stage');
+      if (st) st.classList.toggle('pan', ov > 0);
+    });
+    if (this._track) {
+      const fr = this._frame();
+      const shift = Math.max(0, this._track.offsetWidth - fr.width);
+      this._track.style.setProperty('--shift', shift + 'px');
+      // Case cards shrink slightly on short phones so a whole card stays on screen.
+      const tallest = Math.max.apply(null, Array.prototype.map.call(this._track.children, (c) => c.offsetHeight));
+      const availCases = vh - 92 - 16 - 8;
+      this._track.style.setProperty('--cfit', Math.min(1, availCases / Math.max(1, tallest)).toFixed(4));
+    }
+  }
+  _request() {
+    if (this._pending) return;
+    this._pending = true;
+    this._raf = requestAnimationFrame(() => { this._pending = false; this._update(); });
+  }
+  _tick() {
+    this._update();
+    if (performance.now() - this._start < 2600) {
+      this._raf = requestAnimationFrame(() => this._tick());
+    }
+  }
+  _ease(t, kind) {
+    if (kind === 'linear') return t;
+    if (kind === 'back') { const c1 = 1.70158, c3 = c1 + 1, u = t - 1; return 1 + c3 * u * u * u + c1 * u * u; }
+    return 1 - Math.pow(1 - t, 3);
+  }
+  _coverflow(fr) {
+    if (!this._cards || !this._track) return;
+    const trackLeft = this._track.getBoundingClientRect().left;
+    const mid = fr.left + fr.width / 2, half = fr.width / 2;
+    const smooth = (t) => t * t * (3 - 2 * t);
+    this._cards.forEach((card) => {
+      const centre = trackLeft + card.offsetLeft + card.offsetWidth / 2;
+      const d = (centre - mid) / half;
+      const a = Math.min(1, Math.abs(d));
+      card.style.setProperty('--cr', ((d < 0 ? -1 : 1) * 35 * smooth(a)).toFixed(3) + 'deg');
+      card.style.setProperty('--cz', (-160 * smooth(Math.min(1, Math.abs(d) / 1.2))).toFixed(1) + 'px');
+      card.style.setProperty('--hf', Math.max(0, 1 - Math.abs(d) * 1.6).toFixed(3));
+      card.style.setProperty('--co', (1 - Math.min(0.45, Math.max(0, Math.abs(d) - 0.7) * 0.6)).toFixed(3));
+    });
+  }
+  _update() {
+    const clamp = this._clamp;
+    const vh = window.innerHeight;
+    const fr = this._frame();
+    const now = performance.now();
+    this._scenes.forEach((s) => {
+      const r = s.getBoundingClientRect();
+      const last = s.hasAttribute('data-last');
+      const span = Math.max(1, r.height - (last ? 1 : 2) * vh);
+      const hs = Number(s.getAttribute('data-hs') || 0), he = Number(s.getAttribute('data-he') || 0);
+      const p = clamp((clamp(-r.top / span) - hs) / Math.max(0.01, 1 - hs - he));
+      const e = clamp((vh - r.top) / vh);
+      const x = last ? 0 : clamp((-r.top - span) / vh);
+      s._p = p; s._e = e;
+      s.style.setProperty('--p', p.toFixed(4));
+      s.style.setProperty('--e', e.toFixed(4));
+      s.style.setProperty('--x', x.toFixed(4));
+      const pan = s.getAttribute('data-pan');
+      if (pan) {
+        const ab = pan.split(' ').map(Number);
+        const k = clamp((p - ab[0]) / Math.max(0.01, ab[1] - ab[0]));
+        const si = s.querySelector('.stage-in');
+        if (si) si.style.setProperty('--pan', (k * k * (3 - 2 * k)).toFixed(4));
+      }
+    });
+    this._coverflow(fr);
+    const trackLeft = this._track ? this._track.getBoundingClientRect().left : 0;
+    this._fx.forEach((f) => {
+      let base;
+      if (f.axis === 'x') {
+        const left = f.card ? trackLeft + f.card.offsetLeft : f.el.getBoundingClientRect().left;
+        base = clamp((fr.left + fr.width - left) / (fr.width * 0.55));
+      } else {
+        base = f.scene ? (f.src === 'e' ? f.scene._e : f.scene._p) : 1;
+      }
+      let t = clamp((base - f.a) / Math.max(0.0001, f.b - f.a));
+      if (!f.hasAt && f.intro !== null) t = 1;
+      if (f.rev) t = 1 - t;
+      if (f.intro !== null) {
+        const it = clamp((now - this._start - f.intro) / 1100);
+        t = Math.min(t, it);
+      }
+      t = this._ease(t, f.ease);
+      f.el.style.setProperty('--t', t.toFixed(4));
+    });
+  }
+  renderVals() {
+    const s = this.state || {};
+    const dark = (s.dark !== undefined && s.dark !== null) ? s.dark : ((this.props.theme ?? 'dark') === 'dark');
+    const base = dark ? 'pf-root pf-dark' : 'pf-root pf-light';
+    const open = !!s.menuOpen;
+    return {
+      rootClass: s.cine ? base + ' cine' : base,
+      isDark: dark,
+      isLight: !dark,
+      toggleLabel: dark ? 'Passer en mode clair' : 'Passer en mode sombre',
+      toggle: () => this.setState({ dark: !dark }),
+      menuOpen: open,
+      menuExpanded: open ? 'true' : 'false',
+      menuLabel: open ? 'Fermer le menu' : 'Ouvrir le menu',
+      toggleMenu: () => this.setState({ menuOpen: !open }),
+      closeMenu: () => this.setState({ menuOpen: false })
+    };
+  }
+}
+document.addEventListener('click', function (ev) {
+  var t = ev.target.closest('[data-ref]'); if (!t) return;
+  var root = document.querySelector('.pf-root');
+  if (t.dataset.ref === 'theme') { root.classList.toggle('pf-dark'); root.classList.toggle('pf-light'); }
+  var m = document.querySelector('.ref-menu');
+  if (m && t.dataset.ref === 'menu') m.hidden = !m.hidden;
+  if (m && t.dataset.ref === 'close') m.hidden = true;
+});
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  document.querySelector('.pf-root').classList.add('cine');
+  setTimeout(function () { var c = new Component(); window.__ref = c; c.setupFilm(); }, 60);
+});
+</script>
+</body>
+</html>

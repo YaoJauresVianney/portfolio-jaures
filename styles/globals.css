@@ -1,0 +1,176 @@
+@import 'tailwindcss';
+@import './motion.css';
+
+/* Dark = explicit choice, or no choice yet on a phone (next-themes writes data-theme="auto"). */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (max-width: 1023px) {
+    &:where([data-theme='auto'], [data-theme='auto'] *) {
+      @slot;
+    }
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-terra: var(--terra);
+  --color-terra-strong: var(--terra-strong);
+  --color-terra-ink: var(--terra-ink);
+  --color-ocre: var(--ocre);
+  --color-ocre-ink: var(--ocre-ink);
+  --color-green: var(--green);
+  --color-green-text: var(--green-text);
+  --color-method-bg: var(--method-bg);
+  --color-contact-bg: var(--contact-bg);
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-muted: var(--on-dark-muted);
+  --color-nav-bg: var(--nav-bg);
+  --color-chip: var(--chip);
+  --color-backdrop: var(--backdrop);
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  /* Named sizes keep the reference's default line-height; set leading explicitly where it has one. */
+  --text-xs--line-height: normal;
+  --text-sm--line-height: normal;
+  --text-base--line-height: normal;
+  --text-lg--line-height: normal;
+  --text-xl--line-height: normal;
+  --text-2xl--line-height: normal;
+}
+
+/* Design tokens — values copied from .pf-light / .pf-dark of the references. */
+:root {
+  color-scheme: light;
+  --terra-strong: #a2481f;
+  --bg: #f6efe4;
+  --surface: #fffaf2;
+  --surface-2: #efe3d0;
+  --ink: #1f1a15;
+  --muted: #5e5247;
+  --line: #e2d3bd;
+  --terra: #b4532a;
+  --terra-ink: #fff7ee;
+  --ocre: #c98a1b;
+  --ocre-ink: #85560a;
+  --green: #1f4d3a;
+  --green-text: #1f4d3a;
+  --method-bg: #1f4d3a;
+  --contact-bg: #8f3b1c;
+  --on-dark: #f6efe4;
+  --on-dark-muted: #e4d6c3;
+  --pat-op: 0.08;
+  --nav-bg: rgba(246, 239, 228, 0.86);
+  --chip: #efe3d0;
+  --backdrop: #2e241c;
+
+  @variant dark {
+    color-scheme: dark;
+    --terra-strong: #e07a4f;
+    --bg: #15110d;
+    --surface: #1f1914;
+    --surface-2: #221b15;
+    --ink: #f3eadd;
+    --muted: #bcad99;
+    --line: #3a2f25;
+    --terra: #e07a4f;
+    --terra-ink: #15110d;
+    --ocre: #e3a93a;
+    --ocre-ink: #e3a93a;
+    --green: #7fbf9a;
+    --green-text: #8fcba8;
+    --method-bg: #122a20;
+    --contact-bg: #6e2e16;
+    --on-dark: #f3eadd;
+    --on-dark-muted: #d8c8b4;
+    --pat-op: 0.1;
+    --nav-bg: rgba(21, 17, 13, 0.86);
+    --chip: #352b22;
+    --backdrop: #070504;
+  }
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-manrope), system-ui, sans-serif;
+    /* The reference relies on the browser default, not Tailwind's 1.5. */
+    line-height: normal;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--terra);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Surtitres et étiquettes */
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    @variant lg {
+      font-size: 13px;
+    }
+  }
+  .h2 {
+    margin: 0;
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    @variant lg {
+      font-size: 52px;
+    }
+  }
+  .btn {
+    text-decoration: none;
+    transition: filter 0.15s;
+    @media (hover: hover) {
+      &:hover {
+        filter: brightness(1.08);
+      }
+    }
+  }
+  .diamond {
+    flex-shrink: 0;
+    rotate: 45deg;
+  }
+
+  /* Scènes — mise en page statique (« canvas » de la référence). Le mode film s'ajoute dans motion.css. */
+  /* cqw units (phone h1, photo) measure the full scene width, like the reference's unpadded root. */
+  .sc {
+    container-type: inline-size;
+  }
+  .stage {
+    @apply relative overflow-hidden px-5 py-[72px] lg:px-[120px] lg:py-28;
+  }
+  .stage-in {
+    @apply relative z-[1] mx-auto max-lg:max-w-[400px];
+  }
+  .pat {
+    @apply pointer-events-none absolute opacity-(--pat-op);
+  }
+  .scroll-hint,
+  .cases-bar,
+  .cube-shade {
+    display: none;
+  }
+}

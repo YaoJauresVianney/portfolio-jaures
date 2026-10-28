@@ -1,0 +1,95 @@
+/* Formules 3D et effets du mode film. Étape 1 : seulement la structure statique de l'afficheur à palettes. */
+
+/* Stack — afficheur à palettes : 4 faces (vide, 2 brouillages, nom), chaque face en 2 demi-volets.
+   Hors mode film, seule la face finale (f3) est affichée. */
+.flap {
+  position: relative;
+  height: 52px;
+  border-radius: 8px;
+  background: #1c1611;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 10px 24px rgba(20, 14, 8, 0.18);
+}
+.flap::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: #0b0806;
+  z-index: 20;
+}
+.flap-h {
+  position: absolute;
+  inset-inline: 0;
+  height: 50%;
+  overflow: hidden;
+  background: #1c1611;
+}
+.flap-h.top {
+  top: 0;
+  border-radius: 8px 8px 0 0;
+  transform-origin: 50% 100%;
+}
+.flap-h.bot {
+  bottom: 0;
+  border-radius: 0 0 8px 8px;
+  transform-origin: 50% 0;
+  background: #211a14;
+}
+.flap-h > span {
+  position: absolute;
+  inset-inline: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 21px;
+  font-weight: 600;
+  color: #f3eadd;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.flap-h.top > span {
+  top: 0;
+}
+.flap-h.bot > span {
+  top: -26px;
+}
+.flap-h:not(.f3) {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .flap {
+    height: 68px;
+    border-radius: 10px;
+  }
+  .flap-h.top {
+    border-radius: 10px 10px 0 0;
+  }
+  .flap-h.bot {
+    border-radius: 0 0 10px 10px;
+  }
+  .flap-h > span {
+    height: 68px;
+    padding: 0 18px;
+    font-size: 30px;
+  }
+  .flap-h.bot > span {
+    top: -34px;
+  }
+}
+
+/* Téléphone, thème sombre : panneaux un peu plus clairs (référence mobile). */
+@media (max-width: 1023px) {
+  :is([data-theme='dark'], [data-theme='auto']) :is(.flap, .flap-h) {
+    background: #2b231c;
+  }
+  :is([data-theme='dark'], [data-theme='auto']) .flap-h.bot {
+    background: #30271f;
+  }
+}
