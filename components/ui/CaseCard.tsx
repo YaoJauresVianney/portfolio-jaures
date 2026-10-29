@@ -26,7 +26,9 @@ export function CaseCard({ item, index }: { item: CaseStudy; index: number }) {
     { label: labels.result, text: item.result, color: 'text-green-text' },
   ];
   return (
-    <article className="case flex flex-col gap-[11px] rounded-[20px] border border-line bg-surface p-[18px] lg:gap-8 lg:rounded-[28px] lg:p-10">
+    <article className="case relative flex flex-col gap-[11px] rounded-[20px] border border-line bg-surface p-[18px] lg:gap-8 lg:rounded-[28px] lg:p-10">
+      {/* Shadow of the card in front of the carousel (film mode): only its opacity animates. */}
+      <span aria-hidden="true" className="case-shadow" />
       <div className="flex flex-col gap-[11px] lg:flex-row lg:items-start lg:justify-between lg:gap-6">
         <div className="flex items-baseline gap-3 lg:gap-[18px]">
           <span

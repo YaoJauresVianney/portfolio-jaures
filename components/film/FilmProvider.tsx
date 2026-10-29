@@ -7,6 +7,8 @@ import { useGSAP } from '@gsap/react';
 import type Lenis from 'lenis';
 import { useLenis } from 'lenis/react';
 import { addFx, EASES } from './fx';
+import { SCENES } from './scenes';
+import { slideUp, TRANSITIONS } from './transitions';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 // Phone toolbars resize the viewport while scrolling; re-measuring then would make the film jump.
@@ -46,8 +48,8 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
   const scenes = gsap.utils.toArray<HTMLElement>('[data-scene]', root);
   const tl = gsap.timeline({ defaults: { ease: 'none' } });
   const shown = new Map<HTMLElement, [number, number]>(); // timeline span during which a scene is on screen
-  const track = root.querySelector<HTMLElement>('[data-track]');
-  let shift = 0;
+  const measures: (() => void)[] = [];
+  const cleanups: (() => void)[] = [];
   let t = 0;
 
   // Scenes taller than the screen shrink to fit under the menu (phone: to 92% at most, then pan down).
@@ -58,7 +60,7 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
       .filter((s) => s.dataset.scene !== 'cases')
       .map((s) => [s, { stageIn: s.querySelector<HTMLElement>('.stage-in')!, fit: 1, ov: 0 }]),
   );
-  const measure = () => {
+  const fit = () => {
     const avail = innerHeight - (mobile ? 112 : 136);
     for (const f of fits.values()) {
       const h = f.stageIn.offsetHeight;
@@ -66,18 +68,16 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
       f.ov = mobile ? Math.max(0, Math.round(h * f.fit - avail)) : 0;
       f.stageIn.parentElement!.classList.toggle('pan', f.ov > 0);
     }
-    if (track) shift = Math.max(0, track.offsetWidth - track.parentElement!.clientWidth);
   };
-  measure();
-  ScrollTrigger.addEventListener('refreshInit', measure);
+  fit();
+  measures.push(fit);
 
   scenes.forEach((scene, i) => {
     const id = scene.dataset.scene!;
     const { len, hold: [hs, he] = [0, 0], pan } = timing[id];
     const enter = t;
     if (i > 0) {
-      // Placeholder until each scene gets its own transition (steps 3–5): it slides up over the previous one.
-      tl.fromTo(scene, { yPercent: 100 }, { yPercent: 0, duration: TRANSITION }, t);
+      (TRANSITIONS[id] ?? slideUp)(tl, scenes[i - 1], scene, t, mobile);
       t += TRANSITION;
     }
     tl.addLabel(id, t);
@@ -88,7 +88,7 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
     for (const el of scene.querySelectorAll<HTMLElement>('[data-fx]')) {
       const { at, atM, src, ease, easeM, axis } = el.dataset;
       const win = (mobile && atM) || at;
-      // Skipped: intro-only elements and case-card elements (step 3), elements hidden at this size.
+      // Skipped: intro-only (CSS), card-driven (scenes.ts) and hidden-at-this-size elements.
       if (!win || axis || !el.getClientRects().length) continue;
       const [a, b] = win.split(' ').map(Number);
       // data-src="e": the window is read on the entry transition instead of the scene's progress.
@@ -100,19 +100,30 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
 
     const pat = scene.querySelector('.pat');
     if (pat) tl.fromTo(pat, { y: 0 }, { y: mobile ? -60 : -90, duration: pLen }, p0);
-    if (track && scene.contains(track)) tl.fromTo(track, { x: 0 }, { x: () => -shift, duration: pLen }, p0);
 
     const f = fits.get(scene);
     if (f && pan) {
       const [a, b] = pan;
       tl.fromTo(f.stageIn, { y: 0 }, { y: () => -f.ov, ease: smoothstep, duration: (b - a) * pLen }, p0 + a * pLen);
     }
+    SCENES[id]?.({
+      tl,
+      el: scene,
+      mobile,
+      p0,
+      pLen,
+      measure: (fn) => measures.push(fn),
+      cleanup: (fn) => cleanups.push(fn),
+    });
     shown.set(scene, [i ? enter : 0, t + len + (i < scenes.length - 1 ? TRANSITION : 0)]);
     t += len;
   });
   // The fit scale holds for the whole film (a tween, not a set, so it renders at every scroll position).
   for (const f of fits.values()) tl.fromTo(f.stageIn, { scale: () => f.fit }, { scale: () => f.fit, duration: t }, 0);
   tl.set({}, {}, t); // the timeline lasts exactly the film length, holds included
+  const measure = () => measures.forEach((fn) => fn());
+  measure();
+  ScrollTrigger.addEventListener('refreshInit', measure);
 
   root.style.setProperty('--len', String(t));
   const st = ScrollTrigger.create({
@@ -158,6 +169,7 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
     root.removeEventListener('focusin', onFocus);
     ScrollTrigger.removeEventListener('refreshInit', measure);
     ScrollTrigger.removeEventListener('refresh', jump);
+    cleanups.forEach((fn) => fn());
     for (const f of fits.values()) f.stageIn.parentElement!.classList.remove('pan');
     root.style.removeProperty('--len');
     delete document.documentElement.dataset.film;

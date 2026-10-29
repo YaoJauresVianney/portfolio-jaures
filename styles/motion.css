@@ -16,11 +16,16 @@
   overflow: clip;
   background: var(--backdrop);
 }
-/* Each scene paints as one layer, so a later scene always covers an earlier one (contents included). */
+/* Each scene paints as one layer, so a later scene always covers an earlier one (contents included).
+   Only stages take the pointer: a scene still hidden by its transition's clip-path lets clicks through. */
 [data-film] .sc {
   position: absolute;
   inset: 0;
   isolation: isolate;
+  pointer-events: none;
+}
+[data-film] .stage {
+  pointer-events: auto;
 }
 /* Tant que la timeline n'a pas placé les scènes, seule la première est visible. */
 [data-film='on'] .sc:not(:first-child) {
@@ -181,5 +186,162 @@
   }
   :is([data-theme='dark'], [data-theme='auto']) .flap-h.bot {
     background: #30271f;
+  }
+}
+
+/* ---------- Hero ---------- */
+/* Intro on load: the one time-based animation of the film (reference: data-intro, 1.1 s, cubic ease-out).
+   It starts with the first paint, before any JavaScript. The delay comes from intro() (inline style). */
+[data-film] [data-intro] {
+  --drop: -40px;
+  --right: 60px;
+  /* Longhands: the minifier turns a shorthand without a name into `animation: none`. */
+  animation-duration: 1.1s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  animation-fill-mode: backwards;
+}
+[data-film] [data-intro][data-fx='left'] {
+  animation-name: in-left;
+}
+[data-film] [data-intro][data-fx='blur'] {
+  animation-name: in-blur;
+}
+[data-film] [data-intro][data-fx='drop'] {
+  animation-name: in-drop;
+}
+[data-film] [data-intro][data-fx='zoom'] {
+  animation-name: in-zoom;
+}
+[data-film] [data-intro][data-fx='wipe'] {
+  animation-name: in-wipe;
+}
+[data-film] [data-intro][data-fx='iris'] {
+  animation-name: in-iris;
+}
+[data-film] [data-intro][data-fx='mask'] {
+  animation-name: in-mask;
+}
+[data-film] [data-intro][data-fx='right'] {
+  animation-name: in-right;
+}
+[data-film] [data-intro][data-fx='fade'] {
+  animation-name: in-fade;
+}
+@keyframes in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-140px);
+  }
+}
+@keyframes in-blur {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(1.04);
+  }
+}
+@keyframes in-drop {
+  from {
+    opacity: 0;
+    transform: translateY(var(--drop));
+  }
+}
+@keyframes in-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+@keyframes in-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes in-iris {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+@keyframes in-mask {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(50px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes in-right {
+  from {
+    opacity: 0;
+    transform: translateX(var(--right));
+  }
+}
+@keyframes in-fade {
+  from {
+    opacity: 0;
+  }
+}
+/* Revealed around the hero while the camera pulls back from it. */
+[data-film] .sc-hero {
+  background: var(--surface-2);
+}
+
+/* ---------- Études de cas : carrousel 3D ---------- */
+[data-film] .sc-cases .stage-in {
+  perspective: 1000px;
+}
+/* The track's plane would catch the mouse: only the cards take pointer events. */
+[data-film] .track {
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+[data-film] .track > * {
+  pointer-events: auto;
+}
+.case-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 24px 50px rgba(31, 26, 21, 0.16);
+  opacity: 0;
+  pointer-events: none;
+}
+[data-film] .cases-bar {
+  display: block;
+  position: absolute;
+  inset-inline: 24px;
+  top: 76px;
+  height: 3px;
+  background: var(--line);
+  z-index: 2;
+}
+[data-film] .cases-bar > div {
+  height: 100%;
+  background: var(--terra);
+  transform-origin: 0 50%;
+}
+
+@media (min-width: 1024px) {
+  [data-film] [data-intro] {
+    --drop: -70px;
+    --right: 140px;
+  }
+  [data-film] .sc-cases .stage-in {
+    perspective: 1600px;
+  }
+  .case-shadow {
+    box-shadow: 0 30px 70px rgba(31, 26, 21, 0.16);
+  }
+  [data-film] .cases-bar {
+    inset-inline: var(--pad-x);
+    top: auto;
+    bottom: 40px;
   }
 }

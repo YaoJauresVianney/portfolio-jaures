@@ -2,6 +2,7 @@ import { site, WHATSAPP_URL } from '@/content/site';
 import { Pattern } from '@/components/ui/Patterns';
 import { PhotoDiorama } from '@/components/ui/PhotoDiorama';
 import { WhatsAppIcon } from '@/components/ui/Icons';
+import { intro } from '@/components/film/intro';
 
 const BADGE_COLORS = ['bg-terra', 'bg-ocre', 'bg-green'];
 
@@ -17,30 +18,27 @@ export function Hero() {
         <div className="stage-in flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-12 xl:gap-20">
           {/* On a phone the text column dissolves so the photo can sit above it. */}
           <div className="flex flex-col gap-[clamp(14px,2.6vh,28px)] max-lg:contents lg:flex-1">
-            <div data-fx="left" data-intro="0" className="eyebrow flex items-center gap-2.5 text-ocre-ink lg:gap-3">
+            <div {...intro('left', 0)} className="eyebrow flex items-center gap-2.5 text-ocre-ink lg:gap-3">
               <span aria-hidden="true" className="h-[3px] w-[22px] shrink-0 rounded-xs bg-ocre lg:w-8" />
               <span className="lg:hidden">{h.eyebrow.mobile}</span>
               <span className="max-lg:hidden">{h.eyebrow.desktop}</span>
             </div>
             <h1
               id="hero-title"
-              data-fx="blur"
-              data-intro="150"
+              {...intro('blur', 150)}
               className="m-0 font-serif text-[length:clamp(30px,9.4cqw,40px)] leading-[1.06] font-semibold tracking-[-0.02em] lg:text-[length:clamp(44px,min(5vw,7.6vh),72px)] lg:leading-[1.04] lg:tracking-[-0.025em]"
             >
               {h.title.lead}
               <span className="text-terra italic">{h.title.accent}</span>
             </h1>
             <p
-              data-fx="drop"
-              data-intro="400"
+              {...intro('drop', 400)}
               className="m-0 text-base leading-[1.55] text-muted lg:max-w-[620px] lg:text-[length:clamp(16px,2.3vh,20px)] lg:leading-[1.6]"
             >
               {h.intro}
             </p>
             <div
-              data-fx="zoom"
-              data-intro="600"
+              {...intro('zoom', 600)}
               className="flex flex-col gap-2.5 pt-1 lg:origin-left lg:flex-row lg:flex-wrap lg:items-center lg:gap-4 lg:pt-2"
             >
               <a
@@ -58,8 +56,7 @@ export function Hero() {
               </a>
             </div>
             <ul
-              data-fx="wipe"
-              data-intro="800"
+              {...intro('wipe', 800)}
               className="m-0 flex list-none flex-wrap gap-x-[18px] gap-y-1.5 p-0 text-[13px] font-semibold text-muted lg:gap-x-7 lg:gap-y-2 lg:pt-2 lg:text-sm"
             >
               {h.badges.map((b, i) => (
@@ -72,16 +69,21 @@ export function Hero() {
           </div>
           <PhotoDiorama />
         </div>
+        {/* Fades in on load (outer), then out as the visitor starts scrolling (inner). */}
         <div
           aria-hidden="true"
-          data-fx="fade"
-          data-intro="1400"
-          data-at="0 0.15"
-          data-rev=""
-          className="scroll-hint eyebrow absolute bottom-7 left-1/2 z-[2] -ml-[60px] w-[120px] flex-col items-center gap-2.5 text-muted"
+          {...intro('fade', 1400)}
+          className="scroll-hint absolute bottom-7 left-1/2 z-[2] -ml-[60px] w-[120px]"
         >
-          {h.scrollHint}
-          <span className="h-9 w-0.5 rounded-xs bg-terra" />
+          <div
+            data-fx="fade"
+            data-at="0 0.15"
+            data-rev=""
+            className="eyebrow flex w-full flex-col items-center gap-2.5 text-muted"
+          >
+            {h.scrollHint}
+            <span className="h-9 w-0.5 rounded-xs bg-terra" />
+          </div>
         </div>
       </div>
     </section>
