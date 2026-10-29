@@ -195,4 +195,19 @@ function cases({ tl, el, mobile, p0, pLen, measure, cleanup }: SceneContext) {
   cleanup(() => gsap.set([intro, ...cards, ...shadows], { clearProps: 'transform,opacity' }));
 }
 
-export const SCENES: Record<string, (ctx: SceneContext) => void> = { hero, cases };
+/** Méthode: the timeline starts out lying on a tilted plane, like a road seen in perspective, and stands up. */
+function method({ tl, el, mobile, p0, pLen }: SceneContext) {
+  const [from, to] = mobile ? [0.02, 0.32] : [0.02, 0.47];
+  tl.fromTo(
+    el.querySelector('.road'),
+    {
+      transformPerspective: mobile ? 900 : 1100,
+      transformOrigin: mobile ? '50% 0%' : '50% 100%',
+      rotationX: mobile ? 50 : 58,
+    },
+    { rotationX: 0, duration: (to - from) * pLen },
+    p0 + from * pLen,
+  );
+}
+
+export const SCENES: Record<string, (ctx: SceneContext) => void> = { hero, cases, method };

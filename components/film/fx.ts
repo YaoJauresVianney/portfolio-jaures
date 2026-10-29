@@ -17,7 +17,7 @@ const clip = (from: string) => [{ from: { clipPath: from }, to: { clipPath: 'ins
 const formula = () => [{ from: { '--t': 0 }, to: { '--t': 1 } }];
 
 // Reveal effects, translated from the references' `.cine [data-fx=…]` rules (phone values where they differ).
-// Rotations always swing away from the viewer. domino and drawY come with Méthode (step 5).
+// Rotations always swing away from the viewer.
 const FX: Record<string, (mobile: boolean) => Part[]> = {
   deal: formula,
   flap: formula,
@@ -52,6 +52,12 @@ const FX: Record<string, (mobile: boolean) => Part[]> = {
   tilt: (m) => [{ from: { opacity: 0, skewY: 9, y: m ? 60 : 90 }, to: { opacity: 1, skewY: 0, y: 0 } }],
   iris: () => [{ from: { clipPath: 'circle(0% at 50% 50%)' }, to: { clipPath: 'circle(75% at 50% 50%)' } }],
   draw: () => [{ from: { scaleX: 0, transformOrigin: '0% 50%' }, to: { scaleX: 1 } }],
+  drawY: () => [{ from: { scaleY: 0, transformOrigin: '50% 0%' }, to: { scaleY: 1 } }],
+  // Méthode: each step lies tipped back and stands up when the gold line reaches it.
+  domino: (m) => [
+    { from: { rotationX: 86, transformPerspective: m ? 700 : 900, transformOrigin: '50% 100%' }, to: { rotationX: 0 } },
+    { from: { opacity: 0 }, to: { opacity: 1 }, curve: (e) => (t) => Math.min(1, 2.5 * e(t)) },
+  ],
   fade: () => [{ from: { opacity: 0 }, to: { opacity: 1 } }],
 };
 

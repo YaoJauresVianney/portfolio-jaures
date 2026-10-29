@@ -8,7 +8,7 @@ import type Lenis from 'lenis';
 import { useLenis } from 'lenis/react';
 import { addFx, EASES } from './fx';
 import { SCENES } from './scenes';
-import { slideUp, TRANSITIONS } from './transitions';
+import { TRANSITIONS } from './transitions';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 // Phone toolbars resize the viewport while scrolling; re-measuring then would make the film jump.
@@ -77,7 +77,7 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
     const { len, hold: [hs, he] = [0, 0], pan } = timing[id];
     const enter = t;
     if (i > 0) {
-      (TRANSITIONS[id] ?? slideUp)(tl, scenes[i - 1], scene, t, mobile);
+      TRANSITIONS[id](tl, scenes[i - 1], scene, t, mobile);
       t += TRANSITION;
       // Once covered, the previous scene leaves (as a scrolled-away section would): the backdrop, not an
       // old scene, shows behind the next 3D transition. Opacity, not visibility: its links stay focusable.

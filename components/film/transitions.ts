@@ -7,6 +7,8 @@ const stage = (scene: HTMLElement) => scene.querySelector<HTMLElement>('.stage')
 const shade = (scene: HTMLElement) => scene.querySelector<HTMLElement>('.cube-shade')!;
 // A face of a cube whose centre sits half a screen behind the screen (reference: translateZ(−50vh) … translateZ(50vh)).
 const cubeAxis = () => `50% 50% ${-innerHeight / 2}px`;
+// 4x(1 − x): 0 at both ends, 1 halfway — the reference's x(1 − x) recede, normalised.
+const arc = (x: number) => 4 * x * (1 - x);
 
 // Transitions keyed by the incoming scene, translated from the references' `.cine .sc-* .stage` rules
 // (x = exit progress of the outgoing scene, e = entry progress of the incoming one, both linear in scroll).
@@ -74,9 +76,41 @@ export const TRANSITIONS: Record<string, Transition> = {
       at,
     );
   },
-};
 
-/** Until a scene has its own transition (steps 4–5): it slides up over the previous one. */
-export const slideUp: Transition = (tl, _prev, next, at) => {
-  tl.fromTo(next, { yPercent: 100 }, { yPercent: 0, duration: 1 }, at);
+  // Stack → method: the screen turns over like a card (stack on the front, method on the back),
+  // receding while it turns (translateZ x(1 − x) · −2000px, phone −1200px); both sides darken.
+  method: (tl, prev, next, at, mobile) => {
+    const perspective = mobile ? 1300 : 2200;
+    const depth = (mobile ? -1200 : -2000) / 4; // deepest point of x(1 − x) · depth, reached halfway
+    for (const [scene, from, to] of [
+      [prev, 0, 180],
+      [next, -180, 0],
+    ] as const) {
+      tl.fromTo(
+        stage(scene),
+        { transformPerspective: perspective, rotationY: from },
+        { rotationY: to, duration: 1 },
+        at,
+      );
+      tl.fromTo(stage(scene), { z: 0 }, { z: depth, ease: arc, duration: 1 }, at);
+    }
+    tl.fromTo(shade(prev), { opacity: 0 }, { opacity: 0.7, duration: 1 }, at);
+    tl.fromTo(shade(next), { opacity: 0.7 }, { opacity: 0, duration: 1 }, at);
+  },
+
+  // Method → contact: a diagonal sweep, while method shrinks back (desktop) and fades.
+  contact: (tl, prev, next, at, mobile) => {
+    tl.fromTo(
+      stage(next),
+      { clipPath: 'polygon(0% 0%, 0% 0%, -100% 100%, 0% 100%)' },
+      { clipPath: 'polygon(0% 0%, 200% 0%, 100% 100%, 0% 100%)', duration: 1 },
+      at,
+    );
+    const leaving = prev.querySelector<HTMLElement>('.stage-in')!;
+    tl.fromTo(leaving, { opacity: 1 }, { opacity: 0.3, duration: 1 }, at);
+    // Shrinks to 92% by moving back under its own perspective, not through scale: scale already carries
+    // the fit-to-screen tween, and two scale tweens overlapping would fight when scrolling back up.
+    if (!mobile)
+      tl.fromTo(leaving, { transformPerspective: 1000, z: 0 }, { z: -1000 * (1 / 0.92 - 1), duration: 1 }, at);
+  },
 };

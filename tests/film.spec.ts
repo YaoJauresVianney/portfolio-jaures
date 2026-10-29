@@ -14,6 +14,33 @@ async function settle(page: Page) {
   }
 }
 
+/**
+ * Share of pixels that clearly differ between two screenshots. Text antialiasing alone stays far below
+ * 1%: GSAP keeps an element on its own GPU layer after a 3D effect played backwards, not forwards.
+ */
+async function changed(page: Page, a: Buffer, b: Buffer) {
+  return page.evaluate(
+    async ([a, b]) => {
+      const pixels = async (src: string) => {
+        const img = new Image();
+        img.src = 'data:image/png;base64,' + src;
+        await img.decode();
+        const ctx = new OffscreenCanvas(img.width, img.height).getContext('2d')!;
+        ctx.drawImage(img, 0, 0);
+        return ctx.getImageData(0, 0, img.width, img.height).data;
+      };
+      const [pa, pb] = await Promise.all([pixels(a), pixels(b)]);
+      let n = 0;
+      for (let i = 0; i < pa.length; i += 4) {
+        const d = Math.max(Math.abs(pa[i] - pb[i]), Math.abs(pa[i + 1] - pb[i + 1]), Math.abs(pa[i + 2] - pb[i + 2]));
+        if (d > 64) n++;
+      }
+      return n / (pa.length / 4);
+    },
+    [a.toString('base64'), b.toString('base64')],
+  );
+}
+
 /** id of the scene under the centre of the screen. */
 const sceneOnScreen = (page: Page) =>
   page.evaluate(() => document.elementFromPoint(innerWidth / 2, innerHeight / 2)?.closest('[data-scene]')?.id);
@@ -179,3 +206,28 @@ test('a scene already covered stays reachable from the keyboard', async ({ page 
   await settle(page);
   expect(await sceneOnScreen(page)).toBe('top');
 });
+
+for (const [name, viewport] of [
+  ['desktop', DESKTOP],
+  ['phone', PHONE],
+] as const) {
+  test(`${name}: scrolling back up rewinds the film`, async ({ page }) => {
+    test.setTimeout(120_000);
+    await openFilm(page, viewport);
+    await page.waitForTimeout(2600); // let the hero intro finish
+    const max = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+    const shotAt = async (y: number, from: number) => {
+      await page.evaluate((v) => scrollTo(0, v), from);
+      await settle(page);
+      await page.evaluate((v) => scrollTo(0, v), y);
+      await settle(page);
+      return page.screenshot();
+    };
+    // Every half screen of the film: mid-transitions and mid-scenes alike.
+    for (let y = viewport.height / 2; y < max; y += viewport.height / 2) {
+      const down = await shotAt(y, 0);
+      const up = await shotAt(y, max);
+      expect(await changed(page, down, up), `frame at ${y}px when reached from below`).toBeLessThan(0.01);
+    }
+  });
+}
