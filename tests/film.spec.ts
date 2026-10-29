@@ -138,3 +138,44 @@ test('desktop: the case carousel ends with the last card centred and flat', asyn
   await page.waitForTimeout(800);
   expect(await last.evaluate((el) => getComputedStyle(el).transform)).not.toBe(before);
 });
+
+test('desktop: the service cards are dealt into their columns, the split-flap shows each name', async ({ page }) => {
+  await openFilm(page, DESKTOP);
+  // Rest = end of the scene's own animation (TIMING: services ends at 10 screens, stack at 12.6).
+  await page.evaluate((y) => scrollTo(0, y), 10 * DESKTOP.height - 2);
+  await settle(page);
+  const cards = await page.locator('#services [data-fx="deal"]').evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        left: Math.round(r.left),
+        right: Math.round(r.right),
+        top: Math.round(r.top),
+        opacity: +getComputedStyle(el).opacity,
+      };
+    }),
+  );
+  expect(cards.map((c) => c.opacity)).toEqual([1, 1, 1]);
+  expect(new Set(cards.map((c) => c.top)).size).toBe(1);
+  for (let i = 1; i < 3; i++) expect(cards[i].left - cards[i - 1].right).toBe(24);
+
+  await page.evaluate((y) => scrollTo(0, y), 12.6 * DESKTOP.height - 2);
+  await settle(page);
+  // rotateX(θ) puts cos θ in m22: the blank face's top half has fallen (−90°), the name's bottom half has landed (0°).
+  const flaps = await page.locator('#stack .flap').evaluateAll((els) =>
+    els.map((el) => {
+      const m22 = (sel: string) => new DOMMatrix(getComputedStyle(el.querySelector(sel)!).transform).m22;
+      return [Math.round(m22('.top.f0') * 100) / 100, Math.round(m22('.bot.f3') * 100) / 100];
+    }),
+  );
+  expect(flaps).toEqual(Array(6).fill([0, 1]));
+});
+
+test('a scene already covered stays reachable from the keyboard', async ({ page }) => {
+  await openFilm(page, DESKTOP);
+  await page.locator('#contact a.btn').focus();
+  await settle(page);
+  await page.locator('#top a.btn').first().focus();
+  await settle(page);
+  expect(await sceneOnScreen(page)).toBe('top');
+});

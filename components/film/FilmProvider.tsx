@@ -79,6 +79,9 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
     if (i > 0) {
       (TRANSITIONS[id] ?? slideUp)(tl, scenes[i - 1], scene, t, mobile);
       t += TRANSITION;
+      // Once covered, the previous scene leaves (as a scrolled-away section would): the backdrop, not an
+      // old scene, shows behind the next 3D transition. Opacity, not visibility: its links stay focusable.
+      tl.set(scenes[i - 1], { opacity: 0 }, t);
     }
     tl.addLabel(id, t);
     // The scene's own progress p runs 0 → 1 between its holds.
@@ -135,8 +138,13 @@ function film(root: HTMLElement, lenis: Lenis, mobile: boolean) {
     invalidateOnRefresh: true,
   });
 
+  // Scroll position of a scene's label. Not st.labelToScroll(): with the film starting at the very top
+  // (start = 0, falsy) it refreshes the trigger on every call, which desyncs it from the timeline and
+  // leaves an instant jump (keyboard focus, #hash) showing the wrong scene.
   const go = (scene: HTMLElement, immediate = false) =>
-    lenis.scrollTo(st.labelToScroll(scene.dataset.scene!), { immediate });
+    lenis.scrollTo(st.start + (tl.labels[scene.dataset.scene!] / tl.duration()) * (st.end - st.start), {
+      immediate,
+    });
   const sceneOf = (hash: string) => {
     const el = hash.length > 1 ? document.getElementById(hash.slice(1)) : null;
     return el?.dataset.scene && root.contains(el) ? el : null;

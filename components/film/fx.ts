@@ -12,10 +12,15 @@ export const EASES: Record<string, Ease> = {
 };
 
 const clip = (from: string) => [{ from: { clipPath: from }, to: { clipPath: 'inset(0% 0% 0% 0%)' } }];
+// Effects whose many properties derive from a single t: the reference's CSS formulas are kept as they are
+// in motion.css, and GSAP drives their --t.
+const formula = () => [{ from: { '--t': 0 }, to: { '--t': 1 } }];
 
 // Reveal effects, translated from the references' `.cine [data-fx=…]` rules (phone values where they differ).
-// Rotations always swing away from the viewer. deal, flap, domino and drawY are scene-specific (steps 4–5).
+// Rotations always swing away from the viewer. domino and drawY come with Méthode (step 5).
 const FX: Record<string, (mobile: boolean) => Part[]> = {
+  deal: formula,
+  flap: formula,
   rise: (m) => [{ from: { opacity: 0, y: m ? 50 : 80 }, to: { opacity: 1, y: 0 } }],
   drop: (m) => [{ from: { opacity: 0, y: m ? -40 : -70 }, to: { opacity: 1, y: 0 } }],
   left: () => [{ from: { opacity: 0, x: -140 }, to: { opacity: 1, x: 0 } }],

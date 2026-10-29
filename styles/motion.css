@@ -345,3 +345,74 @@
     bottom: 40px;
   }
 }
+
+/* ---------- Transitions 3D : cube (cas → services) et retournement (stack → méthode) ---------- */
+[data-film] :is(.sc-cases, .sc-services, .sc-stack, .sc-method) .stage {
+  backface-visibility: hidden;
+}
+/* Faces darken while they turn, over the backdrop. */
+[data-film] .cube-shade {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Services : jeu de cartes (formules de la référence, --t piloté par GSAP) ----------
+   Empilées et inclinées au centre (A), ouverture en éventail (B), puis chaque carte se pose à plat (C).
+   --k = −1 / 0 / 1 : colonne de la carte par rapport au centre ; la carte de droite est au-dessus. */
+[data-film] [data-fx='deal'] {
+  --A: clamp(0, calc(var(--t, 0) / 0.25), 1);
+  --B: clamp(0, calc((var(--t, 0) - 0.25) / 0.3), 1);
+  --C: clamp(0, calc((var(--t, 0) - 0.55) / 0.45), 1);
+  position: relative;
+  z-index: calc(2 + var(--k, 0));
+  opacity: var(--A);
+  transform-origin: 50% 50%;
+  transform: perspective(1000px) translateY(calc(var(--k, 0) * -1 * (100% + 14px) * (1 - var(--C))))
+    translateX(calc(var(--k, 0) * 30px * var(--B) * (1 - var(--C)))) rotateX(calc((1 - var(--C)) * 22deg))
+    rotateZ(calc(var(--k, 0) * (3deg + 7deg * var(--B)) * (1 - var(--C))))
+    scale(calc((0.82 + 0.18 * var(--A)) * (0.9 + 0.1 * var(--C))));
+  box-shadow: 0 calc(14px + 18px * (1 - var(--C))) 40px rgba(31, 26, 21, calc(0.08 + 0.14 * (1 - var(--C))));
+}
+
+/* ---------- Stack : afficheur à palettes (formules de la référence, --t piloté par GSAP) ----------
+   Le demi-volet du haut de la face j tombe, celui du bas de la face suivante arrive. */
+[data-film] .flap-h:not(.f3) {
+  display: block;
+}
+.f0 {
+  --j: 0;
+}
+.f1 {
+  --j: 1;
+}
+.f2 {
+  --j: 2;
+}
+.f3 {
+  --j: 3;
+}
+[data-film] .flap-h.top {
+  z-index: calc(10 - var(--j));
+  transform: perspective(300px) rotateX(calc(-90deg * clamp(0, calc(6 * var(--t, 0) - 2 * var(--j)), 1)));
+}
+[data-film] .flap-h.bot {
+  z-index: calc(1 + var(--j));
+  transform: perspective(300px) rotateX(calc(90deg * (1 - clamp(0, calc(6 * var(--t, 0) - 2 * var(--j) + 1), 1))));
+}
+
+@media (min-width: 1024px) {
+  [data-film] [data-fx='deal'] {
+    transform-origin: 50% 100%;
+    transform: perspective(1200px)
+      translateX(calc((var(--k, 0) * -1 * (100% + 24px) + var(--k, 0) * 90px * var(--B)) * (1 - var(--C))))
+      translateY(calc(var(--B) * (1 - var(--C)) * -24px)) rotateX(calc((1 - var(--C)) * 26deg))
+      rotateZ(calc(var(--k, 0) * (4deg + 10deg * var(--B)) * (1 - var(--C))))
+      scale(calc((0.8 + 0.2 * var(--A)) * (0.88 + 0.12 * var(--C))));
+    box-shadow: 0 calc(18px + 22px * (1 - var(--C))) 50px rgba(31, 26, 21, calc(0.08 + 0.14 * (1 - var(--C))));
+  }
+}

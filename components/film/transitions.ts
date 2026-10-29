@@ -4,6 +4,9 @@ import { gsap } from 'gsap';
 type Transition = (tl: gsap.core.Timeline, prev: HTMLElement, next: HTMLElement, at: number, mobile: boolean) => void;
 
 const stage = (scene: HTMLElement) => scene.querySelector<HTMLElement>('.stage')!;
+const shade = (scene: HTMLElement) => scene.querySelector<HTMLElement>('.cube-shade')!;
+// A face of a cube whose centre sits half a screen behind the screen (reference: translateZ(−50vh) … translateZ(50vh)).
+const cubeAxis = () => `50% 50% ${-innerHeight / 2}px`;
 
 // Transitions keyed by the incoming scene, translated from the references' `.cine .sc-* .stage` rules
 // (x = exit progress of the outgoing scene, e = entry progress of the incoming one, both linear in scroll).
@@ -35,6 +38,39 @@ export const TRANSITIONS: Record<string, Transition> = {
       stage(next),
       { clipPath: `circle(0% at ${centre})` },
       { clipPath: `circle(${mobile ? 120 : 110}% at ${centre})`, ease: 'power1.in', duration: 1 },
+      at,
+    );
+  },
+
+  // Case studies → services: a cube turning upward. The case studies tip back (front face → top) while
+  // services come up as the face below; both faces darken while they turn.
+  services: (tl, prev, next, at, mobile) => {
+    const perspective = mobile ? 1200 : 2000;
+    tl.fromTo(
+      stage(prev),
+      { transformPerspective: perspective, transformOrigin: cubeAxis, rotationX: 0 },
+      { rotationX: 90, duration: 1 },
+      at,
+    );
+    tl.fromTo(
+      stage(next),
+      { transformPerspective: perspective, transformOrigin: cubeAxis, rotationX: -90 },
+      { rotationX: 0, duration: 1 },
+      at,
+    );
+    tl.fromTo(shade(prev), { opacity: 0 }, { opacity: 0.5, duration: 1 }, at);
+    tl.fromTo(shade(next), { opacity: 0.5 }, { opacity: 0, duration: 1 }, at);
+  },
+
+  // Services → stack: a horizontal wipe, while services drift up (14vh, phone 10vh) and fade to half.
+  stack: (tl, prev, next, at, mobile) => {
+    tl.fromTo(stage(next), { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1 }, at);
+    // yPercent rather than y: y already carries the phone pan of that scene.
+    const leaving = prev.querySelector<HTMLElement>('.stage-in')!;
+    tl.fromTo(
+      leaving,
+      { yPercent: 0, opacity: 1 },
+      { yPercent: () => (-(mobile ? 10 : 14) * innerHeight) / leaving.offsetHeight, opacity: 0.5, duration: 1 },
       at,
     );
   },
