@@ -1,4 +1,94 @@
-/* Formules 3D et effets du mode film. Étape 1 : seulement la structure statique de l'afficheur à palettes. */
+@import 'lenis/dist/lenis.css';
+
+/* Formules 3D et effets du mode film. */
+
+/* ---------- Mode film (html[data-film]) : un cadre sticky de 100vh, les six scènes empilées dedans ----------
+   Longueur de défilement = (1 + --len) écrans. FilmProvider fixe --len depuis sa table TIMING ; ces valeurs
+   ne servent qu'avant son démarrage (garder les totaux de la table). */
+[data-film] .film {
+  --len: 17.6;
+  height: calc((1 + var(--len)) * 100vh);
+}
+[data-film] .frame {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: clip;
+  background: var(--backdrop);
+}
+/* Each scene paints as one layer, so a later scene always covers an earlier one (contents included). */
+[data-film] .sc {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+/* Tant que la timeline n'a pas placé les scènes, seule la première est visible. */
+[data-film='on'] .sc:not(:first-child) {
+  visibility: hidden;
+}
+/* overflow: clip (pas hidden) : le focus clavier ne doit jamais faire défiler une scène. */
+[data-film] .stage {
+  height: 100%;
+  overflow: clip;
+  padding: 84px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+[data-film] .stage-in {
+  width: 100%;
+}
+[data-film] .stage.pan {
+  justify-content: flex-start;
+}
+[data-film] .stage.pan .stage-in {
+  transform-origin: 50% 0;
+}
+
+/* Études de cas : piste horizontale, la dernière carte s'arrête au centre. */
+[data-film] .sc-cases .stage {
+  padding: 92px 0 16px;
+}
+[data-film] .sc-cases .stage-in {
+  max-width: none;
+}
+[data-film] .track {
+  --card: calc(min(100cqw, 440px) - 48px);
+  flex-direction: row;
+  gap: 16px;
+  width: max-content;
+  padding: 0 calc((100cqw - var(--card)) / 2);
+}
+[data-film] .track > * {
+  flex-shrink: 0;
+  width: var(--card);
+}
+[data-film] .case-intro {
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  [data-film] .film {
+    --len: 18.8;
+  }
+  [data-film] .stage {
+    padding: 108px var(--pad-x) 28px;
+  }
+  [data-film] .sc-cases .stage {
+    padding: 108px 0 28px;
+  }
+  [data-film] .track {
+    --card: min(860px, 100cqw - 2 * var(--pad-x));
+    gap: 40px;
+    padding: 0 calc((100cqw - var(--card)) / 2) 0 var(--pad-x);
+  }
+  [data-film] .case-intro {
+    width: 520px;
+  }
+  [data-film] .scroll-hint {
+    display: flex;
+  }
+}
 
 /* Stack — afficheur à palettes : 4 faces (vide, 2 brouillages, nom), chaque face en 2 demi-volets.
    Hors mode film, seule la face finale (f3) est affichée. */

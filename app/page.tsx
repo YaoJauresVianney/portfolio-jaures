@@ -1,5 +1,6 @@
 import { site } from '@/content/site';
 import { Nav } from '@/components/layout/Nav';
+import { FilmProvider } from '@/components/film/FilmProvider';
 import { PatternDefs } from '@/components/ui/Patterns';
 import { Hero } from '@/components/scenes/Hero';
 import { Cases } from '@/components/scenes/Cases';
@@ -20,12 +21,14 @@ export default function Home() {
       <PatternDefs />
       <Nav />
       <main id="contenu" tabIndex={-1} className="outline-none">
-        <Hero />
-        <Cases />
-        <Services />
-        <Stack />
-        <Method />
-        <Contact />
+        <FilmProvider>
+          <Hero />
+          <Cases />
+          <Services />
+          <Stack />
+          <Method />
+          <Contact />
+        </FilmProvider>
       </main>
     </>
   );
