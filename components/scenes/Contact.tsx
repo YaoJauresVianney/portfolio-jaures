@@ -12,7 +12,7 @@ export function Contact() {
           <div
             data-fx="zoom"
             data-at="0 0.25"
-            className="relative flex flex-col gap-4 overflow-hidden rounded-3xl bg-contact-bg px-[22px] py-[26px] text-on-dark lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:rounded-[32px] lg:px-20 lg:py-[72px] [&_:focus-visible]:outline-on-dark"
+            className="relative flex flex-col gap-4 overflow-hidden rounded-3xl bg-contact-bg px-[22px] py-[26px] text-on-dark lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:rounded-[32px] lg:px-12 lg:py-[72px] xl:gap-16 xl:px-20 [&_:focus-visible]:outline-on-dark"
           >
             <Pattern
               kind="kita"
@@ -40,7 +40,7 @@ export function Contact() {
               >
                 {c.text}
               </p>
-              <div className="max-lg:contents lg:flex lg:items-center lg:gap-6 lg:pt-2">
+              <div className="max-lg:contents lg:flex lg:flex-wrap lg:items-center lg:gap-x-6 lg:gap-y-3 lg:pt-2">
                 <div data-fx="pop" data-ease="back" data-at="0.48 0.62" className="relative lg:origin-left">
                   <a
                     href={WHATSAPP_URL}

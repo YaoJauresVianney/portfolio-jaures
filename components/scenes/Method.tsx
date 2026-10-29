@@ -31,7 +31,7 @@ export function Method() {
               {m.title}
             </h2>
           </div>
-          <div className="road relative lg:-mr-16">
+          <div className="road relative lg:mr-[min(0px,56px_-_var(--pad-x))]">
             {/* Desktop: one horizontal line from the first circle to the last. */}
             <div aria-hidden="true" className={`${LINE_X} ${TRACK}`} />
             <div
@@ -69,7 +69,7 @@ export function Method() {
                       {String(i + 1).padStart(2, '0')}
                     </div>
                     <div className="flex flex-col gap-1 pt-[9px] lg:contents">
-                      <h3 className="m-0 font-serif text-xl leading-[1.2] font-semibold lg:text-2xl">{step.title}</h3>
+                      <h3 className="m-0 font-serif text-xl leading-[1.2] font-semibold xl:text-2xl">{step.title}</h3>
                       <p className="m-0 text-[15px] leading-[1.55] text-on-dark-muted lg:text-base lg:leading-[1.6]">
                         {step.text}
                       </p>

@@ -69,6 +69,8 @@
   --nav-bg: rgba(246, 239, 228, 0.86);
   --chip: #efe3d0;
   --backdrop: #2e241c;
+  /* Desktop side margin: 120px from 1280px up (reference), shrinking linearly to 48px at 1024px. */
+  --pad-x: clamp(48px, 28.125vw - 240px, 120px);
 
   @variant dark {
     color-scheme: dark;
@@ -142,6 +144,7 @@
   }
   .btn {
     text-decoration: none;
+    white-space: nowrap;
     transition: filter 0.15s;
     @media (hover: hover) {
       &:hover {
@@ -160,7 +163,7 @@
     container-type: inline-size;
   }
   .stage {
-    @apply relative overflow-hidden px-5 py-[72px] lg:px-[120px] lg:py-28;
+    @apply relative overflow-hidden px-5 py-[72px] lg:px-(--pad-x) lg:py-28;
   }
   .stage-in {
     @apply relative z-[1] mx-auto max-lg:max-w-[400px];

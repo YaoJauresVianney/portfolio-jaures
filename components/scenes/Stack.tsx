@@ -13,7 +13,7 @@ export function Stack() {
       <div className="stage bg-bg">
         <Pattern kind="zigzag" className="pat inset-0 h-[120%] w-full text-ocre" />
         <div className="stage-in flex flex-col gap-[22px] lg:gap-11">
-          <div className="flex flex-col gap-2.5 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+          <div className="flex flex-col gap-2.5 lg:flex-row lg:items-end lg:justify-between lg:gap-10 xl:gap-16">
             <div className="flex flex-col gap-2.5 lg:gap-4">
               <div data-fx="wipe" data-at="0 0.15" className="eyebrow text-ocre-ink">
                 {s.eyebrow}
@@ -25,7 +25,7 @@ export function Stack() {
             <p
               data-fx="fade"
               data-at="0.2 0.4"
-              className="m-0 text-base leading-[1.55] text-muted lg:max-w-[380px] lg:text-lg lg:leading-[1.6]"
+              className="m-0 text-base leading-[1.55] text-muted lg:max-w-[300px] lg:text-lg xl:max-w-[380px] lg:leading-[1.6]"
             >
               {s.intro}
             </p>

@@ -14,7 +14,7 @@ export function Hero() {
           kind="losange"
           className="pat inset-0 h-[120%] w-full text-terra lg:inset-auto lg:top-0 lg:right-0 lg:w-[640px]"
         />
-        <div className="stage-in flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-20">
+        <div className="stage-in flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-12 xl:gap-20">
           {/* On a phone the text column dissolves so the photo can sit above it. */}
           <div className="flex flex-col gap-[clamp(14px,2.6vh,28px)] max-lg:contents lg:flex-1">
             <div data-fx="left" data-intro="0" className="eyebrow flex items-center gap-2.5 text-ocre-ink lg:gap-3">
@@ -41,7 +41,7 @@ export function Hero() {
             <div
               data-fx="zoom"
               data-intro="600"
-              className="flex flex-col gap-2.5 pt-1 lg:origin-left lg:flex-row lg:items-center lg:gap-4 lg:pt-2"
+              className="flex flex-col gap-2.5 pt-1 lg:origin-left lg:flex-row lg:flex-wrap lg:items-center lg:gap-4 lg:pt-2"
             >
               <a
                 href={WHATSAPP_URL}
